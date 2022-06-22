@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Stinky Raccoons", "disabled": false, "contract": { "address": "secret1ymwmldtmulng0flpt7qjv8lplpel8cj2l9jj04", "hash": "32937B721543EDD15C6A8E1F5309D8FC701CBF2F824E81E531B0A645FD1278DA" } },
+  { "id": 2, "name": "Clandestina Gang", "disabled": true, "contract": { "address": "", "hash": "" } },
+  { "id": 3, "name": "Confidential Cats", "disabled": true, "contract": { "address": "", "hash": "" } }
+]

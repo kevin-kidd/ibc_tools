@@ -1,0 +1,9 @@
+[
+  { "id": 1, "name": "Secret Network", "disabled": false },
+  { "id": 2, "name": "Stargaze", "disabled": true },
+  { "id": 3, "name": "Osmosis", "disabled": true },
+  { "id": 5, "name": "Evmos", "disabled": true },
+  { "id": 5, "name": "OmniFlix", "disabled": true },
+  { "id": 4, "name": "AssetMantle", "disabled": true },
+  { "id": 4, "name": "Juno", "disabled": true }
+]
