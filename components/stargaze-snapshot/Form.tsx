@@ -11,12 +11,13 @@ const Form: FunctionComponent<StateProps> = (props) => {
     const [state, setState] = [props.state, props.setState]
 
     const grabData = async (sg721: string) => {
+
         const snapshot = await grabSnapshot(sg721)
-        if(snapshot.status === 200){
-            setState(snapshot.data)
-            setState({currentOwners: snapshot.data.owners.slice(0, 10)})
+        if(snapshot.success){
+            setState(snapshot) // @ts-ignore
+            setState({currentOwners: snapshot.owners.slice(0, 10)})
         } else {
-            setState({alertSeverity: "error", alertMsg: snapshot.data.message})
+            setState({alertSeverity: "error", alertMsg: snapshot.message})
         }
         setState({loading: false})
         return
