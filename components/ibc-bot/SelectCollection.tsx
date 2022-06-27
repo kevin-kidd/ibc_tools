@@ -7,7 +7,7 @@ import { classNames } from "../../func/bot/helper"
 
 const SelectCollection: FunctionComponent<StateProps> = (props) => {
     return (
-        <div className="lg:col-span-3 lg:col-start-2 sm:row-span-1">
+        <div className="lg:col-span-3 lg:col-start-2 sm:row-span-1 z-0">
             <Listbox value={props.state.collection} onChange={(e) => props.setState({ collection: e })}>
                 {({ open }) => (
                     <>
@@ -28,9 +28,9 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
                                 leaveTo="opacity-0"
                             >
                                 <Listbox.Options className="
-                                    transition duration-200 ease-in-out delay-100
+                                    transition duration-200 ease-in-out delay-100 absolute z-10
                                     bg-[#fff] shadow-lg max-h-40 py-1 scrollbar scrollbar-thumb-yellow-200 scrollbar-track-gray-100
-                                    mt-1 w-full absolute text-base overflow-auto focus:outline-none sm:text-sm border border-[#000]"
+                                    mt-1 w-full text-base overflow-auto focus:outline-none sm:text-sm border border-[#000]"
                                 >
                                     {collections.map((collection) => (
                                         <Listbox.Option

@@ -8,7 +8,7 @@ const DiscordTextbox: FunctionComponent<StateProps> = (props) => {
     const [state, setState] = [props.state, props.setState]
 
     return(
-        <div className="lg:col-span-3 lg:col-start-5 sm:row-span-1">
+        <div className="lg:col-span-3 lg:col-start-5 sm:row-span-1 z-1">
             <div>
                 <label className="block text-sm font-medium text-gray-700">
                     Discord username
