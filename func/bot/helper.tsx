@@ -9,6 +9,6 @@ export const postData = async (permit: any, discord: string, address: string, co
         address: address,
         signature: permit,
         discord: discord,
-        contract_addr: contract
+        contractAddr: contract
     })
 }
