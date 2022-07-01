@@ -68,8 +68,7 @@ const Form: FunctionComponent<StateProps> = (props) => {
         <div>
             <div className="w-full
                 lg:px-0 md:px-12 sm:px-6 px-4 lg:-mt-10
-                lg:grid lg:grid-cols-10 lg:gap-8 mb-20
-            ">
+                lg:grid lg:grid-cols-10 lg:gap-8 mb-10">
                 <SelectCollection state={props.state} setState={props.setState} />
                 <DiscordTextbox state={props.state} setState={props.setState} />
                 <div className="
@@ -89,6 +88,11 @@ const Form: FunctionComponent<StateProps> = (props) => {
                         Submit
                     </button>
                 </div>
+            </div>
+            <div className="justify-center content-center flex mb-10">
+                <p>
+                    <a href="https://patrik768772.typeform.com/IBCBOT" className="hover:text-[#85ff89] font-bold">Add IBC Bot</a> to your Discord server!
+                </p>
             </div>
         </div>
     )
