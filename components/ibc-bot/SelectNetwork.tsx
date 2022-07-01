@@ -1,4 +1,4 @@
-import {Fragment, FunctionComponent} from "react";
+import {FunctionComponent} from "react";
 import {Listbox, Transition} from "@headlessui/react";
 import {SelectorIcon} from "@heroicons/react/solid";
 import { StateProps } from '../../types/botTypes'
@@ -23,7 +23,6 @@ const SelectNetwork: FunctionComponent<StateProps> = (props) => {
 
                             <Transition
                                 show={open}
-                                as={Fragment}
                                 leave="transition ease-in duration-100"
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
@@ -35,7 +34,7 @@ const SelectNetwork: FunctionComponent<StateProps> = (props) => {
                                 >
                                     {networks.map((network) => (
                                         <Listbox.Option
-                                            key={network.id}
+                                            key={network.name}
                                             className={({ active }) =>
                                                 classNames(
                                                     active ? 'text-[#85ff89]' : 'text-gray-900',

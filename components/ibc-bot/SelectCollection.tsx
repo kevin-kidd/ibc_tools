@@ -34,7 +34,7 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
                                 >
                                     {collections.map((collection) => (
                                         <Listbox.Option
-                                            key={collection.id}
+                                            key={collection.name}
                                             className={({ active }) =>
                                                 classNames(
                                                     active ? 'text-[#85ff89]' : 'text-gray-900',

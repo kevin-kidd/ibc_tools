@@ -78,7 +78,6 @@ const Form: FunctionComponent<StateProps> = (props) => {
                 >
                     <button type="submit"
                             onClick={linkDiscord}
-                            disabled
                             className="mt-6 align-middle text-black font-extrabold inline-flex
                          border-[#1d1d1d] border yellow-button transition duration-200
                          text-lg bg-[#fff985] px-7 py-1 mr-2 focus:outline-none"

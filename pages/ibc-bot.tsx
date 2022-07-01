@@ -28,7 +28,7 @@ const IBCBot: NextPage = () => {
             alertSeverity: '',
             discord: '',
             network: {id: 0, name: networks[0].name, disabled: false},
-            collection: {id: 0, name: collections[0].name, disabled: true, contract: collections[0].contract}
+            collection: {id: 0, name: collections[0].name, disabled: false, contract: collections[0].contract}
         }
     )
 
