@@ -91,7 +91,7 @@ const Form: FunctionComponent<StateProps> = (props) => {
             </div>
             <div className="justify-center content-center flex mb-10">
                 <p>
-                    <a href="https://patrik768772.typeform.com/IBCBOT" className="hover:text-[#85ff89] font-bold">Add IBC Bot</a> to your Discord server!
+                    <a href="https://patrik768772.typeform.com/IBCBOT" target="_blank" rel="noreferrer" className="hover:text-[#85ff89] font-bold">Add IBC Bot</a> to your Discord server!
                 </p>
             </div>
         </div>
