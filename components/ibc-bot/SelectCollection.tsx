@@ -42,6 +42,7 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
                                                 )
                                             }
                                             value={collection}
+                                            disabled={collection.disabled}
                                         >
                                              <span className={classNames(collection.disabled ? "!text-[#64748b]" : "")}>
                                                 <span className={classNames(props.state.collection.name === collection.name ? 'text-[#85ff89]' : 'font-normal')}>
