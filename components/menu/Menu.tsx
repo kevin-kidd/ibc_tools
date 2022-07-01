@@ -48,6 +48,7 @@ const Menu: FunctionComponent = () => {
                                 </div>
                                 <div className="flex px-2 lg:px-0 basis-3/4">
                                     <div className="hidden lg:flex lg:space-x-10">
+                                        <Dropdown mainTitle={"Tools"} items={toolsDropdownItems} mobile={false} />
                                         <Dropdown mainTitle={"Explore"} items={exploreDropdownItems} mobile={false} />
                                         {
                                             menuItems.map((item) => {
@@ -62,7 +63,6 @@ const Menu: FunctionComponent = () => {
                                                 )
                                             })
                                         }
-                                        <Dropdown mainTitle={"Tools"} items={toolsDropdownItems} mobile={false} />
                                     </div>
                                 </div>
                                 <div className="flex items-center lg:hidden">
