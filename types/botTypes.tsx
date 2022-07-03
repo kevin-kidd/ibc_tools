@@ -11,6 +11,11 @@ export interface Network {
     disabled: boolean
 }
 
+export interface PageProps {
+    collections: Collection[]
+    networks: Network[]
+}
+
 export interface Collection {
     id: number,
     name: string,
@@ -23,8 +28,10 @@ export interface BotState {
     alertMsg: string
     alertSeverity: string
     discord: string
-    network: Network
-    collection: Collection
+    collections: Collection[]
+    networks: Network[]
+    currentNetwork: Network
+    currentCollection: Collection
 }
 
 export interface StateProps {

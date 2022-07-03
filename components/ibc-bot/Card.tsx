@@ -20,7 +20,7 @@ const Card: FunctionComponent<StateProps> = (props) => {
                 </div>
                 <img className="w-1/2 absolute bottom-2 left-4 lg:w-2/5 lg:left-6 lg:bottom-10" src="/IBC_BOT_Logo.png" alt="IBC Bot" />
             </div>
-            { props.state.network.id === 0 ?
+            { props.state.currentNetwork.id === 0 ?
                 <SelectNetwork state={props.state} setState={props.setState} />
                 :
                 <Form state={props.state} setState={props.setState} />

@@ -1,7 +1,8 @@
 import type { NextPage } from 'next'
 import Head from "next/head";
 import {useReducer} from "react";
-import {BotState} from "../types/botTypes"
+import {BotState, PageProps} from "../types/botTypes"
+import { mongoConnect } from '../func/bot/db';
 
 // Components
 import Menu from "../components/menu/Menu"
@@ -10,12 +11,10 @@ import Alert from "../components/ibc-bot/Alert"
 
 // Assets
 import styles from '../styles/Home.module.css'
-import networks from '../data/networks.json'
-import collections from '../data/collections.json'
+// import collections from '../data/collections.json'
 import {classNames} from "../func/bot/helper";
 
-
-const IBCBot: NextPage = () => {
+const IBCBot: NextPage<PageProps> = (props) => {
 
     const [state, setState] = useReducer(
         (state: BotState, newState: Partial<BotState>) => ({
@@ -23,12 +22,14 @@ const IBCBot: NextPage = () => {
             ...newState
         }),
         {
+            collections: props.collections,
+            networks: props.networks,
             loading: false,
             alertMsg: '',
             alertSeverity: '',
             discord: '',
-            network: {id: 0, name: networks[0].name, disabled: false},
-            collection: {id: 0, name: collections[0].name, disabled: false, contract: collections[0].contract}
+            currentNetwork: {id: 0, name: props.networks[0].name, disabled: false},
+            currentCollection: {id: 0, name: props.collections[0].name, disabled: false, contract: props.collections[0].contract}
         }
     )
 
@@ -51,6 +52,33 @@ const IBCBot: NextPage = () => {
         </main>
     </>
   )
+}
+
+export async function getServerSideProps() {
+    try {
+        // Get the Mongo DB client
+        const database = await mongoConnect()
+
+        // Grab the networks data
+        const networksProjection = { _id: 0, id: 1, name: 1, disabled: 1 }
+        const networks = await database.collection('networks').find().project(networksProjection).toArray()
+
+
+        // Grab the collections data
+        const projection = { _id: 0, id: 1, name: 1, disabled: 1, contract: 1 }
+        const collections = await database.collection('info').find().project(projection).toArray()
+
+        // Pass data to the page via props
+        return { props: { collections: collections, networks: networks } }
+    } catch (e: any) {
+        console.error(e.message)
+        return { 
+            props: { 
+                collections: [{id: 0,name: "Under Maintenance",disabled: true,contract: { address: null, hash: null}}],
+                networks: [{id: 0,name: "Under Maintenance",disabled: true}]
+            }
+        }
+    }
 }
 
 export default IBCBot

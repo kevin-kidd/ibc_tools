@@ -1,20 +1,19 @@
 import {Fragment, FunctionComponent} from "react";
 import {Listbox, Transition} from "@headlessui/react";
 import {CheckIcon, SelectorIcon} from "@heroicons/react/solid";
-import collections from "../../data/collections.json"
 import {StateProps} from "../../types/botTypes"
 import { classNames } from "../../func/bot/helper"
 
 const SelectCollection: FunctionComponent<StateProps> = (props) => {
     return (
         <div className="lg:col-span-3 lg:col-start-2 sm:row-span-1 z-0">
-            <Listbox value={props.state.collection} onChange={(e) => props.setState({ collection: e })}>
+            <Listbox value={ props.state.currentCollection } onChange={(e) => props.setState({ currentCollection: e })}>
                 {({ open }) => (
                     <>
                         <Listbox.Label className="block text-sm font-medium text-gray-700">Select a collection...</Listbox.Label>
                         <div className="mt-1 relative">
                             <Listbox.Button className="bg-white relative shadow-lg w-full border border-gray-300 shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none hover:ring-1 hover:ring-[#85ff89] hover:border-1 hover:border-[#85ff89] sm:text-sm">
-                                <span className="block truncate">{props.state.collection.name}</span>
+                                <span className="block truncate">{props.state.currentCollection.name}</span>
                                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                                         <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                     </span>
@@ -32,7 +31,7 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
                                     bg-[#fff] shadow-lg max-h-40 py-1 scrollbar scrollbar-thumb-yellow-200 scrollbar-track-gray-100
                                     mt-1 w-full text-base overflow-auto focus:outline-none sm:text-sm border border-[#000]"
                                 >
-                                    {collections.map((collection) => (
+                                    {props.state.collections.map((collection) => (
                                         <Listbox.Option
                                             key={collection.name}
                                             className={({ active }) =>
@@ -45,11 +44,11 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
                                             disabled={collection.disabled}
                                         >
                                              <span className={classNames(collection.disabled ? "!text-[#64748b]" : "")}>
-                                                <span className={classNames(props.state.collection.name === collection.name ? 'text-[#85ff89]' : 'font-normal')}>
+                                                <span className={classNames(props.state.currentCollection.name === collection.name ? 'text-[#85ff89]' : 'font-normal')}>
                                                     {collection.name}
                                                 </span>
                                             </span>
-                                            {props.state.collection.name === collection.name ?
+                                            {props.state.currentCollection.name === collection.name ?
                                                 (
                                                     <span className="text-[#85ff89] absolute inset-y-0 right-2 flex items-center pr-4">
                                                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
