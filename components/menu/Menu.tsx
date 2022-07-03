@@ -81,6 +81,7 @@ const Menu: FunctionComponent = () => {
                     </div>
                     <Disclosure.Panel className="lg:hidden">
                         <div className="pt-2" style={{borderTop: '1px solid #000'}}>
+                            <Dropdown mainTitle={"Tools"} items={toolsDropdownItems} mobile={true} />
                             <Dropdown mainTitle={"Explore"} items={exploreDropdownItems} mobile={true} />
                             {
                                 menuItems.map((item) => {
@@ -95,7 +96,6 @@ const Menu: FunctionComponent = () => {
                                     )
                                 })
                             }
-                            <Dropdown mainTitle={"Tools"} items={toolsDropdownItems} mobile={true} />
                         </div>
                     </Disclosure.Panel>
                 </>
