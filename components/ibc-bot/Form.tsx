@@ -43,14 +43,14 @@ const Form: FunctionComponent<StateProps> = (props) => {
 
             let permit = await getPermit()
 
-            let execResponse = await setWhitelist(client, state.collection.contract)
+            let execResponse = await setWhitelist(client, state.currentCollection.contract)
             if(execResponse === undefined){
                 // Display error - set whitelist approval transaction failed!
                 displayError("Unable to set whitelisted approval. Please try again.")
                 return
             }
             // Post signature, address & token list to the API
-            let postResponse = await postData(permit, state.discord, client.address, state.collection.contract.address)
+            let postResponse = await postData(permit, state.discord, client.address, state.currentCollection.contract.address)
             if(postResponse.status === 200){
                 displaySuccess()
             } else {
