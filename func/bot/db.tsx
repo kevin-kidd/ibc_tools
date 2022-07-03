@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const MONGODB_URI: string = process.env.MONGODB_URI
+const MONGODB_URI: any = process.env.MONGODB_URI
 
 if (!MONGODB_URI) {
     throw new Error("Could not find Mongo DB URI from environment variables.")
