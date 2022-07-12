@@ -53,14 +53,20 @@ const Form: FunctionComponent<StateProps> = (props) => {
             let postResponse = await postData(permit, state.discord, client.address, state.currentCollection.contract.address)
             if(postResponse.status === 200){
                 displaySuccess()
-            } else {
-                displayError("Unexpected error occurred. Please contact support for help.")
             }
         } catch (e: any) {
             if(e.message === "Request rejected") {
                 displayError("Please accept the Keplr popup window.")
+            } else if(e.message === "Request failed with status code 500") {
+                if(e.response.data.includes("Inventory is empty")) {
+                    displayError("Could not find any NFTs in your inventory.")
+                } else {
+                    displayError(e.response.data)
+                }
+            } else {
+                displayError("Unexpected error occurred. Please contact support for help.")
             }
-            displayError(e.message)
+            console.error(e)
         }
     }
 
