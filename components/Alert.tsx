@@ -1,27 +1,27 @@
-import {FunctionComponent} from "react";
-import {StateProps} from "../../types/botTypes";
+import {FunctionComponent, MouseEventHandler} from "react";
 import {CheckCircleIcon, ExclamationCircleIcon, XIcon} from '@heroicons/react/solid'
-import { classNames } from "../../func/bot/helper"
+import { classNames } from "../func/bot/helper"
 
-const Alert: FunctionComponent<StateProps> = (props) => {
+type AlertProps = {
+    alertMsg: String
+    alertSeverity: String
+    closeAlert: MouseEventHandler<HTMLButtonElement>
+}
 
-    const closeAlert = () => {
-        props.setState({alertMsg: '', alertSeverity: ''})
-    }
-
+const Alert: FunctionComponent<AlertProps> = ({ alertMsg, alertSeverity, closeAlert }) => {
     return(
-        <div className={classNames(props.state.alertSeverity === "success" ? "rounded-md bg-green-50 p-4" : "rounded-md bg-red-50 p-4" )}>
+        <div className={classNames(alertSeverity === "success" ? "rounded-md bg-green-50 p-4" : "rounded-md bg-red-50 p-4" )}>
             <div className="flex">
                 <div className="flex-shrink-0">
-                    { props.state.alertSeverity === 'success' ?
+                    { alertSeverity === 'success' ?
                         <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
                         :
                         <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
                     }
                 </div>
                 <div className="ml-3">
-                        <p className={classNames(props.state.alertSeverity === "success" ? "text-sm font-medium text-green-800" : "text-sm font-medium text-red-800")}>
-                            {props.state.alertMsg}
+                        <p className={classNames(alertSeverity === "success" ? "text-sm font-medium text-green-800" : "text-sm font-medium text-red-800")}>
+                            {alertMsg}
                         </p>
                 </div>
                 <div className="ml-auto pl-3">
@@ -29,7 +29,7 @@ const Alert: FunctionComponent<StateProps> = (props) => {
                         <button
                             type="button"
                             onClick={closeAlert}
-                            className={classNames(props.state.alertSeverity === "success" ?
+                            className={classNames(alertSeverity === "success" ?
                                 "inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
                                 :
                                 "inline-flex bg-red-50 rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"

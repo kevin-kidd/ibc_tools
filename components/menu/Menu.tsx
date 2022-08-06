@@ -1,7 +1,8 @@
 import { FunctionComponent } from "react";
-import { Disclosure } from '@headlessui/react'
-import Dropdown from './Dropdown'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { Disclosure } from "@headlessui/react";
+import Dropdown from "./Dropdown";
+import Link from "next/link";
+import {MenuIcon, XIcon} from "@heroicons/react/solid";
 
 const exploreDropdownItems = [
     { title: "All", link: "https://www.ibcnfts.com/ibc-nfts-explore", disabled: false },
@@ -16,9 +17,9 @@ const exploreDropdownItems = [
 
 const toolsDropdownItems = [
     { title: "IBC Bot", link: "/ibc-bot", disabled: false },
-    { title: "Stargaze Snapshot", link: "/stargaze-snapshot", disabled: false },
-    { title: "Secret NFT Suite", link: "#", disabled: true },
-    { title: "Stargaze Airdrop", link: "#", disabled: true }
+    { title: "Stargaze Snapshot", link: "/stargaze/snapshot", disabled: false },
+    { title: "Stargaze Airdrop", link: "/stargaze/airdrop", disabled: false },
+    { title: "Secret NFT Suite", link: "#", disabled: true }
 ]
 
 const menuItems = [
@@ -53,13 +54,14 @@ const Menu: FunctionComponent = () => {
                                         {
                                             menuItems.map((item) => {
                                                 return (
-                                                    <a
-                                                        key={item.title}
-                                                        href={item.link}
-                                                        className="whitespace-nowrap text-[#1d1d1d] hover:text-[#85ff89] inline-flex items-center px-1 pt-1 text-md font-normal"
-                                                    >
-                                                        { item.title }
-                                                    </a>
+                                                    <Link href={item.link} key={item.title}>
+                                                        <a
+                                                            className="whitespace-nowrap text-[#1d1d1d] hover:text-[#85ff89] inline-flex items-center px-1 pt-1 text-md font-normal"
+                                                        >
+                                                            { item.title }
+                                                        </a>
+                                                    </Link>
+
                                                 )
                                             })
                                         }

@@ -7,7 +7,7 @@ import { mongoConnect } from '../func/bot/db';
 // Components
 import Menu from "../components/menu/Menu"
 import Card from "../components/ibc-bot/Card"
-import Alert from "../components/ibc-bot/Alert"
+import Alert from "../components/Alert"
 
 // Assets
 import styles from '../styles/Home.module.css'
@@ -33,25 +33,25 @@ const IBCBot: NextPage<PageProps> = (props) => {
         }
     )
 
-  return (
-    <>
-        <Head>
-            <link rel="icon" href="/favicon.png" type="image/x-icon" />
-            <link rel="apple-touch-icon" href="/IBC_NFT_Webclip.png" />
-            <title>Manage your community with Discord NFT verification! 🤖</title>
-            <meta name="description" content="IBC Bot is a Discord bot for community management, including NFT proof-of-ownership that allows you to verify NFT holders and tokenize your community." />
-        </Head>
-        <img className="lg:hidden md:hidden" src="/assetmantle_mobile_banner.png" alt="banner" />
-        <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
-        <Menu />
-        <main className={styles.main}>
-            <Card setState={setState} state={state} />
+    return (
+        <>
+            <Head>
+                <link rel="icon" href="/favicon.png" type="image/x-icon" />
+                <link rel="apple-touch-icon" href="/IBC_NFT_Webclip.png" />
+                <title>Manage your community with Discord NFT verification! 🤖</title>
+                <meta name="description" content="IBC Bot is a Discord bot for community management, including NFT proof-of-ownership that allows you to verify NFT holders and tokenize your community." />
+            </Head>
+            <img className="lg:hidden md:hidden" src="/assetmantle_mobile_banner.png" alt="banner" />
+            <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
+            <Menu />
+            <main className={styles.main}>
+                <Card setState={setState} state={state} />
                 <div className={classNames(state.alertMsg !== '' ? "absolute bottom-5 right-1 lg:right-5" : "hidden")}>
-                    <Alert state={state} setState={setState} />
+                    <Alert alertMsg={state.alertMsg} alertSeverity={state.alertSeverity} closeAlert={() => { setState({alertMsg: "", alertSeverity: ""}) }} />
                 </div>
-        </main>
-    </>
-  )
+            </main>
+        </>
+    )
 }
 
 export async function getServerSideProps() {

@@ -6,8 +6,7 @@ import { classNames } from "../../func/bot/helper"
 
 const SelectNetwork: FunctionComponent<StateProps> = (props) => {
     return(
-        <div className="w-full lg:grid lg:grid-cols-4
-                lg:px-0 md:px-12 sm:px-6 px-4 lg:-mt-10 mb-20">
+        <div className="w-full lg:grid lg:grid-cols-4 lg:px-0 md:px-12 sm:px-6 px-4 mb-20">
             <Listbox value={props.state.currentNetwork} onChange={(e) => props.setState({ currentNetwork: e })}>
                 {({ open }) => (
                     <div className="col-span-2 col-start-2">

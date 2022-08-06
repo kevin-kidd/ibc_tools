@@ -12,19 +12,15 @@ const Card: FunctionComponent<StateProps> = (props) => {
             md:mt-20 md:mb-14 lg:mt-10 sm:mt-8 mt-20 h-full
             "
         >
-            <div className="
-                flex justify-center relative
-            ">
-                <div>
-                    <img className="h-3/5 border border-[#f3eee9] object-cover w-full" src="/background2.jpeg" alt=""/>
-                </div>
-                <img className="w-1/2 absolute bottom-2 left-4 lg:w-2/5 lg:left-6 lg:bottom-10" src="/IBC_BOT_Logo.png" alt="IBC Bot" />
+            <img className="border border-[#f3eee9] h-60 object-cover w-full" src="/background.svg" alt="IBC NFTs" />
+            <div className="flex justify-center mt-10">
+                { props.state.currentNetwork.id === 0 ?
+                    <SelectNetwork state={props.state} setState={props.setState} />
+                    :
+                    <Form state={props.state} setState={props.setState} />
+                }
             </div>
-            { props.state.currentNetwork.id === 0 ?
-                <SelectNetwork state={props.state} setState={props.setState} />
-                :
-                <Form state={props.state} setState={props.setState} />
-            }
+
         </div>
     )
 }
