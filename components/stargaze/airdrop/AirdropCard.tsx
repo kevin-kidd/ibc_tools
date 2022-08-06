@@ -4,6 +4,7 @@ import { MsgExecuteContractEncodeObject, coin, GasPrice } from "cosmwasm";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { toUtf8 } from '@cosmjs/encoding';
+import {classNames} from "../../../func/bot/helper";
 
 const AIRDROP_FEE = coin(0, 'ustars')
 const funds = parseInt(AIRDROP_FEE.amount) == 0 ? [] : [AIRDROP_FEE]
@@ -19,6 +20,7 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
     const [client, setClient] = useState<SigningCosmWasmClient>();
 
     const execTransaction = async () => {
+        setState({loading: true});
         if(client === undefined) { setConnected(false); return }
         let executeContractMsgs: MsgExecuteContractEncodeObject[] = [];
         for(const transaction of transactions[currentTx - 1]){
@@ -52,12 +54,14 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             }
         } catch (e: any) {
             console.error(e);
-            if(e.message === "Failed to retrieve account from signer") {
+            if(e.message === "Request rejected") {
+                setState({ alertMsg: "The Keplr popup was rejected or closed.", alertSeverity: "error" });
+            } else if(e.message === "Failed to retrieve account from signer") {
                 setState({ alertMsg: "Failed to retrieve account from signer. Please reconnect Keplr and try again.", alertSeverity: "error" });
-            }
-            if(e.message.includes("Sender is not an admin")) setState({ alertMsg: "You do not have permission to mint from this contract.", alertSeverity: "error" });
+            } else if(e.message.includes("Sender is not an admin")) setState({ alertMsg: "You do not have permission to mint from this contract.", alertSeverity: "error" });
             else setState({ alertMsg: e.message, alertSeverity: "error" });
         }
+        setState({loading: false});
     }
 
     let connectKeplr: () => Promise<boolean>;
@@ -155,7 +159,7 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
                         <button
                             key={`tx-button-${index}`} disabled={index + 1 !== currentTx || remainingNFTs === 0}
                             onClick={execTransaction}
-                            className={`px-4 py-2 bg-[#fff985] button-dropshadow text-black font-bold 
+                            className={`px-4 py-2 bg-[#fff985] button-dropshadow text-black font-bold inline-flex
                                 ${
                                     index + 1 < currentTx ? "bg-[#85ff89]" : null
                                 }
@@ -167,6 +171,10 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
                                 }
                             `}
                         >
+                            <svg className={`${state.loading && index + 1 === currentTx ? "animate-spin h-5 w-5 mr-3 align-center -ml-2 mt-0.5" : "hidden"}`} viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
                             Exec Transaction #{index + 1}
                         </button>
                     ))
