@@ -56,8 +56,11 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
                     setState({loading: false, alertSeverity: "error", alertMsg: "Please check that you have entered the correct contract address."})
                 }
             } else {
-                console.log(e.message)
-                setState({loading: false, alertSeverity: "error", alertMsg: "Failed to fetch, please try again or contact support."})
+                console.log(e.message);
+                let errorMsg: string = "";
+                if(e.message.includes("bech32"))  errorMsg = "Incorrect contract address. Please check you did not make any typos.";
+                else errorMsg = e.message;
+                setState({loading: false, alertSeverity: "error", alertMsg: errorMsg})
             }
         }
         setState({loading: false})

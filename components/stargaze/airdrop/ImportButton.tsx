@@ -5,7 +5,7 @@ import {ChevronDownIcon} from "@heroicons/react/solid";
 import {useFilePicker} from "use-file-picker";
 import Papa from "papaparse";
 import {read, utils} from "xlsx";
-import {Owner} from "../../../types/snapshotTypes";
+import airdrop from "../../../pages/stargaze/airdrop";
 
 const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
 
@@ -68,7 +68,7 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                 // @ts-ignore
                 Papa.parse(csvData, {
                     complete: function(results: any) {
-                        const indexOfAddress = getIndexOfAddress(results.data)
+                        const indexOfAddress = getIndexOfAddress(results.data);
                         if(indexOfAddress === -1) {
                             setState({
                                 alertMsg: "Unable to find the 'address' column. Please make sure you have the same structure as the template file.",
@@ -77,7 +77,7 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                             return;
                         }
                         results.data.shift();
-                        let airdropList: Recipient[] = []
+                        let airdropList: Recipient[] = [];
                         results.data.forEach((element: any) => {
                             if(indexOfAddress === 1) {
                                 airdropList.push({
@@ -121,11 +121,11 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
         try {
             if (csvFile.filesContent.length > 0) {
                 const file = csvFile.filesContent[0]
-                if(file.hasOwnProperty('name')) {
+                if (file.hasOwnProperty('name')) {
                     // @ts-ignore
                     const content: String = file.content;
-                    if(file.name.includes(".csv")) handleCSV(content);
-                    else setState({ alertMsg: `File type is not supported.`, alertSeverity: "error" });
+                    if (file.name.includes(".csv")) handleCSV(content);
+                    else setState({alertMsg: `File type is not supported.`, alertSeverity: "error"});
                 }
             } else if (xlsxFile.filesContent.length > 0) {
                 const file = xlsxFile.filesContent[0]

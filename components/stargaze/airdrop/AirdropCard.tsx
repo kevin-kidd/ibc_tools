@@ -54,13 +54,15 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             }
         } catch (e: any) {
             console.error(e);
-            if(e.message === "Request rejected") {
-                setState({ alertMsg: "The Keplr popup was rejected or closed.", alertSeverity: "error" });
-            } else if(e.message === "Failed to retrieve account from signer") {
-                setState({ alertMsg: "Failed to retrieve account from signer. Please reconnect Keplr and try again.", alertSeverity: "error" });
-            } else if(e.message.includes("Sender is not an admin")) setState({ alertMsg: "You do not have permission to mint from this contract.", alertSeverity: "error" });
+            let errorMsg: string = "";
+            if (e.message === "Request rejected") errorMsg = "The Keplr popup was rejected or closed.";
+            else if(e.message.includes("addr_validate")) errorMsg = "One of the addresses in your airdrop list is not a valid address.";
+            else if(e.message === "Failed to retrieve account from signer") errorMsg = "Failed to retrieve account from signer. Please reconnect Keplr and try again.";
+            else if(e.message.includes("Sender is not an admin")) errorMsg = "You do not have permission to mint from this contract.";
             else setState({ alertMsg: e.message, alertSeverity: "error" });
+            setState({ alertMsg: errorMsg, alertSeverity: "error" });
         }
+
         setState({loading: false});
     }
 
