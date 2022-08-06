@@ -3,15 +3,21 @@ import {useReducer} from "react";
 
 // Components
 import Head from "next/head";
-import Menu from "../components/menu/Menu";
-import FormCard from "../components/stargaze-snapshot/FormCard"
-import CollectionCard from "../components/stargaze-snapshot/CollectionCard"
+import Menu from "../../components/menu/Menu";
+import FormCard from "../../components/stargaze/snapshot/FormCard"
+import CollectionCard from "../../components/stargaze/snapshot/CollectionCard"
 
 // Assets
-import styles from "../styles/Home.module.css";
-import {SnapshotState} from "../types/snapshotTypes";
+import styles from "../../styles/Home.module.css";
+import {SnapshotState} from "../../types/snapshotTypes";
+import HoldersCard from "../../components/stargaze/snapshot/HoldersCard";
 
-const StargazeSnapshot: NextPage = () => {
+export const defaultConfig = {
+    uniqueOnly: false,
+    tokenAmount: { min: -1, max: -1 }
+}
+
+const Snapshot: NextPage = () => {
 
     const [state, setState] = useReducer(
         (state: SnapshotState, newState: Partial<SnapshotState>) => ({
@@ -19,8 +25,8 @@ const StargazeSnapshot: NextPage = () => {
             ...newState
         }),
         {
-            loading: false, alertMsg: '', alertSeverity: '', address: '',
-            uniqueHolders: '', numTokens: '', name: '', owners: [], currentPage: 1, currentOwners: []
+            loading: false, currentPage: 1, owners: [], pageOfOwners: [], ownersToExport: [], address: '',
+            config: defaultConfig, uniqueHolders: []
         }
     )
 
@@ -36,10 +42,13 @@ const StargazeSnapshot: NextPage = () => {
             <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
             <Menu />
             <main className={styles.main}>
-                {state.owners.length === 0 ?
+                { state.owners.length === 0 ?
                     <FormCard state={state} setState={setState} />
                     :
-                    <CollectionCard state={state} setState={setState} />
+                    <>
+                        <CollectionCard state={state} setState={setState} />
+                        <HoldersCard setState={setState} state={state} />
+                    </>
                 }
             </main>
         </>
@@ -47,4 +56,4 @@ const StargazeSnapshot: NextPage = () => {
 
 }
 
-export default StargazeSnapshot
+export default Snapshot

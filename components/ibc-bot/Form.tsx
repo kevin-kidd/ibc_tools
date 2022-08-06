@@ -73,18 +73,15 @@ const Form: FunctionComponent<StateProps> = (props) => {
     return(
         <div>
             <div className="w-full
-                lg:px-0 md:px-12 sm:px-6 px-4 lg:-mt-10
+                lg:px-0 md:px-12 sm:px-6 px-4
                 lg:grid lg:grid-cols-10 lg:gap-8 mb-10">
                 <SelectCollection state={props.state} setState={props.setState} />
                 <DiscordTextbox state={props.state} setState={props.setState} />
-                <div className="
-                lg:col-span-2 lg:col-start-8
-                sm:row-span-1"
-                >
+                <div className="lg:col-span-2 lg:col-start-8 sm:row-span-1">
                     <button type="submit"
                             onClick={linkDiscord}
                             className="mt-6 align-middle text-black font-extrabold inline-flex
-                         border-[#1d1d1d] border yellow-button transition duration-200
+                         border-[#1d1d1d] border button-dropshadow transition duration-200
                          text-lg bg-[#fff985] px-7 py-1 mr-2 focus:outline-none"
                     >
                         <svg className={classNames(state.loading ? "animate-spin h-5 w-5 mr-3 align-center -ml-2 mt-1" : "hidden")} viewBox="0 0 24 24">

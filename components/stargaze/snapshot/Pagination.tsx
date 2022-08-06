@@ -1,4 +1,4 @@
-import { StateProps } from "../../types/snapshotTypes";
+import { StateProps } from "../../../types/snapshotTypes";
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/solid";
 import {FunctionComponent} from "react";
 
@@ -9,16 +9,16 @@ const Pagination: FunctionComponent<StateProps> = (props) => {
         let current: number
         if(props.state.currentPage === 2 && !forward || props.state.currentPage === 1 && forward){
             current = 10
-        } else if(props.state.currentPage === Math.ceil(props.state.owners.length / 10) && !forward) {
-            current = Math.floor(props.state.owners.length / 10) * 10
+        } else if(props.state.currentPage === Math.ceil(props.state.ownersToExport.length / 10) && !forward) {
+            current = Math.floor(props.state.ownersToExport.length / 10) * 10
         } else {
             current = props.state.currentPage * 10
         }
 
         if(forward) {
-            props.setState({currentOwners: props.state.owners.slice(current, current + 10), currentPage: props.state.currentPage + 1})
+            props.setState({pageOfOwners: props.state.ownersToExport.slice(current, current + 10), currentPage: props.state.currentPage + 1})
         } else {
-            props.setState({currentOwners: props.state.owners.slice(current - 10, current), currentPage: props.state.currentPage - 1})
+            props.setState({pageOfOwners: props.state.ownersToExport.slice(current - 10, current), currentPage: props.state.currentPage - 1})
         }
     }
 
@@ -33,7 +33,7 @@ const Pagination: FunctionComponent<StateProps> = (props) => {
                     Previous
                 </button>
                 <button
-                    disabled={props.state.currentPage === Math.ceil(Number(props.state.owners.length) / 10)}
+                    disabled={props.state.currentPage === Math.ceil(Number(props.state.ownersToExport.length) / 10)}
                     onClick={() => handlePage(true)}
                     className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
@@ -46,9 +46,9 @@ const Pagination: FunctionComponent<StateProps> = (props) => {
                         Showing
                         <span className="font-medium"> {(props.state.currentPage * 10) - 9} </span>
                         to
-                        <span className="font-medium"> {(props.state.currentPage * 10 <= props.state.owners.length ? props.state.currentPage * 10 : props.state.owners.length)} </span>
+                        <span className="font-medium"> {(props.state.currentPage * 10 <= props.state.ownersToExport.length ? props.state.currentPage * 10 : props.state.ownersToExport.length)} </span>
                         of
-                        <span className="font-medium"> {props.state.owners.length} </span>
+                        <span className="font-medium"> {props.state.ownersToExport.length} </span>
                         results
                     </p>
                 </div>
@@ -69,7 +69,7 @@ const Pagination: FunctionComponent<StateProps> = (props) => {
                             {props.state.currentPage}
                         </button>
                         <button
-                            disabled={props.state.currentPage === Math.ceil(Number(props.state.owners.length) / 10)}
+                            disabled={props.state.currentPage === Math.ceil(Number(props.state.ownersToExport.length) / 10)}
                             onClick={() => handlePage(true)}
                             className="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                         >

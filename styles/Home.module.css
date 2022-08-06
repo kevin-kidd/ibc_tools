@@ -6,7 +6,7 @@
   align-items: center;
   background-image: url('/background.png');
   background-position: 0 0;
-  background-size: contain;
+  background-size: unset;
   background-clip: border-box;
 }
 

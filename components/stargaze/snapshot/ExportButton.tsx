@@ -1,56 +1,53 @@
-import {FunctionComponent, useRef} from "react";
-import {StateProps} from "../../types/snapshotTypes";
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
-import { CSVLink } from 'react-csv'
-import { utils, writeFile } from "xlsx"
-
+import {Fragment, FunctionComponent, useRef} from "react";
+import {StateProps} from "../../../types/snapshotTypes";
+import {utils, writeFile} from "xlsx";
+import {Menu, Transition} from "@headlessui/react";
+import {CSVLink} from "react-csv";
+import {ChevronDownIcon} from "@heroicons/react/solid";
 
 const ExportButton: FunctionComponent<StateProps> = (props) => {
 
-    const csvLink = useRef()
+    const csvLink = useRef();
 
     const exportXLSX = () => {
-        let sheet = utils.json_to_sheet(props.state.owners)
-        let wb = utils.book_new()
-        utils.book_append_sheet(wb, sheet, 'Airdrop List')
-        writeFile(wb, 'export.xlsx');
+        let sheet = utils.json_to_sheet(props.state.ownersToExport);
+        let wb = utils.book_new();
+        utils.book_append_sheet(wb, sheet, `Snapshot - ${ new Date().toDateString() }`)
+        writeFile(wb, 'snapshot.xlsx');
     }
 
     const exportCSV = () => {
         // @ts-ignore
-        csvLink.current.link.click()
+        csvLink.current.link.click();
     }
 
     const exportJSON = () => {
-        const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-            JSON.stringify(props.state.owners)
-        )}`;
+        const exportData = props.state.ownersToExport.length === 0 ? props.state.ownersToExport : props.state.ownersToExport;
+        const jsonString = `data:text/json;chatset=utf-8,${ encodeURIComponent(JSON.stringify(exportData)) }`;
         const link = document.createElement("a");
         link.href = jsonString;
-        link.download = "export.json";
+        link.download = "snapshot.json";
         link.click();
     }
 
     return(
         <Menu as="div" className="relative inline-block text-left z-20">
             <CSVLink
-                data={props.state.owners}
-                filename='airdrop.csv'
-                className='hidden'
                 // @ts-ignore
                 ref={csvLink}
+                data={props.state.ownersToExport}
+                filename='snapshot.csv'
+                className='hidden'
                 target='_blank'
             />
             <div>
                 <Menu.Button className="inline-flex justify-center w-full focus:outline-none
                 font-extrabold inline-flex
-                         border-[#1d1d1d] border yellow-button transition duration-200
+                         border-[#1d1d1d] border button-dropshadow transition duration-200
                          text-md bg-[#fff985] px-4 py-1 mr-2 focus:outline-none
 
                 ">
-                    <ChevronDownIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                    <ChevronDownIcon className="-ml-1 mr-2 mt-0.5 h-5 w-5" aria-hidden="true" />
                     Export
                 </Menu.Button>
             </div>
@@ -101,4 +98,4 @@ const ExportButton: FunctionComponent<StateProps> = (props) => {
     )
 }
 
-export default ExportButton
+export default ExportButton;
