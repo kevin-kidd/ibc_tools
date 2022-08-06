@@ -2,7 +2,6 @@
 This is the source code for https://tools.ibcnfts.com/
 
 ## Tools
-***
 ### IBC Bot
 IBC Bot is a Discord bot for community management, utilizing NFT proof-of-ownership that allows you to verify NFT holders and tokenize your community.
 
