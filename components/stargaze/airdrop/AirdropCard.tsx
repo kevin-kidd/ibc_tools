@@ -110,7 +110,6 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             for (let i = 1; i <= txAmount; i++) {
                 const bounds = [(i - 1) * 500, i * 500];
                 const transaction: Recipient[] = state.airdropList.slice(bounds[0], bounds[1]);
-                console.log(transaction);
                 newTransactions.push(transaction);
             }
             setTransactions(newTransactions);

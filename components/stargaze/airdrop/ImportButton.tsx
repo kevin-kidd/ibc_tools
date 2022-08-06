@@ -9,10 +9,17 @@ import {Owner} from "../../../types/snapshotTypes";
 
 const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
 
-    const [openFileSelector, { filesContent, loading }] = useFilePicker({
+    const [openXLSXSelector, xlsxFile] = useFilePicker({
         multiple: false,
         readAs: 'ArrayBuffer',
-        accept: '.csv, .xlsx, .json',
+        accept: '.xlsx',
+        limitFilesConfig: { max: 1 }
+    });
+
+    const [openCSVSelector, csvFile] = useFilePicker({
+        multiple: false,
+        readAs: 'Text',
+        accept: '.csv',
         limitFilesConfig: { max: 1 }
     });
 
@@ -56,28 +63,31 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
             return unique.length;
         }
 
-        const handleCSV = (csvData: ArrayBuffer) => {
+        const handleCSV = (csvData: String) => {
             try {
                 // @ts-ignore
-                const data = String.fromCharCode.apply(null, new Uint8Array(csvData))
-                Papa.parse(data, {
+                Papa.parse(csvData, {
                     complete: function(results: any) {
                         const indexOfAddress = getIndexOfAddress(results.data)
                         if(indexOfAddress === -1) {
-                            // error
+                            setState({
+                                alertMsg: "Unable to find the 'address' column. Please make sure you have the same structure as the template file.",
+                                alertSeverity: "error"
+                            })
+                            return;
                         }
                         results.data.shift();
                         let airdropList: Recipient[] = []
                         results.data.forEach((element: any) => {
                             if(indexOfAddress === 1) {
                                 airdropList.push({
-                                    token_id: element[1],
-                                    address: element[0]
+                                    token_id: element[0],
+                                    address: element[1]
                                 })
                             } else {
                                 airdropList.push({
-                                    token_id: element[0],
-                                    address: element[1]
+                                    token_id: element[1],
+                                    address: element[0]
                                 })
                             }
                         });
@@ -89,19 +99,6 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
             } catch (e) {
                 setState({ alertMsg: `Format mismatch. Please confirm that your airdrop file has the same structure as the template.`, alertSeverity: "error" });
                 console.error(e)
-            }
-        }
-
-        const handleJSON = (jsonData: ArrayBuffer) => {
-            try {
-                // @ts-ignore
-                let airdropList = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(jsonData)))
-                if(!validateList(airdropList)) return;
-                const uniqueAmount = getUniqueAddresses(airdropList);
-                setState({ airdropList: airdropList, currentStep: 2, uniqueAmount: uniqueAmount });
-            } catch (e) {
-                setState({ alertMsg: `Format mismatch. Please confirm that your airdrop file has the same structure as the template.`, alertSeverity: "error" });
-                console.error(e);
             }
         }
 
@@ -121,27 +118,33 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
             }
         }
 
-        if(filesContent.length > 0) {
-            try {
-                const file = filesContent[0]
+        try {
+            if (csvFile.filesContent.length > 0) {
+                const file = csvFile.filesContent[0]
+                if(file.hasOwnProperty('name')) {
+                    // @ts-ignore
+                    const content: String = file.content;
+                    if(file.name.includes(".csv")) handleCSV(content);
+                    else setState({ alertMsg: `File type is not supported.`, alertSeverity: "error" });
+                }
+            } else if (xlsxFile.filesContent.length > 0) {
+                const file = xlsxFile.filesContent[0]
                 if(file.hasOwnProperty('name')) {
                     // @ts-ignore
                     const content: ArrayBuffer = file.content;
-                    if(file.name.includes('.csv')) handleCSV(content);
-                    else if(file.name.includes('.json')) handleJSON(content);
-                    else if(file.name.includes('.xlsx')) handleXLSX(content);
-                    else setState({ alertMsg: `File type (${file.name}) is not supported.`, alertSeverity: "error" });
+                    if(file.name.includes(".xlsx")) handleXLSX(content);
+                    else setState({ alertMsg: `File type is not supported.`, alertSeverity: "error" });
                 }
-                window.scroll({
-                    top: document.body.offsetHeight,
-                    left: 0,
-                    behavior: 'smooth',
-                });
-            } catch (e) {
-                console.error(e)
             }
+            window.scroll({
+                top: document.body.offsetHeight,
+                left: 0,
+                behavior: 'smooth',
+            });
+        } catch (e) {
+            console.error(e)
         }
-    }, [filesContent, setState])
+    }, [csvFile.filesContent, xlsxFile.filesContent, setState])
 
     return(
         <Menu as="div" className="relative inline-block text-left z-20">
@@ -168,25 +171,25 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                 <Menu.Items className="origin-top-right absolute right-0 mt-1 w-full shadow-lg bg-white ring-1 border border-black ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                     <div className="py-1">
                         <Menu.Item>
-                            <a className="group flex items-center px-4 py-2 text-sm hover:text-[#85ff89] hover:cursor-pointer" onClick={() => openFileSelector()}>
+                            <a className="group flex items-center px-4 py-2 text-sm hover:text-[#85ff89] hover:cursor-pointer" onClick={() => openXLSXSelector()}>
                                 XLSX
                             </a>
                         </Menu.Item>
                     </div>
                     <div className="py-1">
                         <Menu.Item>
-                            <a className='group flex items-center px-4 py-2 text-sm  hover:text-[#85ff89] hover:cursor-pointer' onClick={() => openFileSelector()}>
+                            <a className='group flex items-center px-4 py-2 text-sm  hover:text-[#85ff89] hover:cursor-pointer' onClick={() => openCSVSelector()}>
                                 CSV
                             </a>
                         </Menu.Item>
                     </div>
-                    <div className="py-1">
-                        <Menu.Item>
-                            <a className='group flex items-center px-4 py-2 text-sm  hover:text-[#85ff89] hover:cursor-pointer'  onClick={() => openFileSelector()}>
-                                JSON
-                            </a>
-                        </Menu.Item>
-                    </div>
+                    {/*<div className="py-1">*/}
+                    {/*    <Menu.Item>*/}
+                    {/*        <a className='group flex items-center px-4 py-2 text-sm  hover:text-[#85ff89] hover:cursor-pointer'  onClick={() => openFileSelector()}>*/}
+                    {/*            JSON*/}
+                    {/*        </a>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*</div>*/}
                 </Menu.Items>
             </Transition>
         </Menu>
