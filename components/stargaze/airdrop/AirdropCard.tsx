@@ -39,9 +39,6 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             if(state.dropFromInv) contractAddress = state.sg721Address
             else contractAddress = state.minterAddress;
 
-            console.log(contractAddress);
-            console.log(msg);
-
             const executeContractMsg: MsgExecuteContractEncodeObject = {
                 typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
                 value: MsgExecuteContract.fromPartial({

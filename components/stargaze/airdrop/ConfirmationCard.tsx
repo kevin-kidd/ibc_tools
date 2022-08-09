@@ -8,9 +8,9 @@ const ConfirmationCard: FunctionComponent<StateProps> = ({ state, setState }) =>
                     <p className="text-xl truncate">Collection Details</p>
                     <p className="mt-2 text-md truncate">Name: {state.name}</p>
                     <p className="mt-2 text-md truncate">Total NFTs (minted): {state.numTokens}</p>
-                    <p className="mt-2 text-sm truncate">{state.contractAddress}</p>
+                    <p className="mt-2 text-sm truncate">{state.minterAddress}</p>
                 </div>
-                <div className="m-4 border-[#d4d1ce] border"></div>
+                <div className="m-4 border-[#d4d1ce] border" />
                 <div className="flex justify-center mt-2">
                     <p>{`You are about to airdrop
                     ${state.airdropList.length}
@@ -19,7 +19,7 @@ const ConfirmationCard: FunctionComponent<StateProps> = ({ state, setState }) =>
                     unique addresses.`}</p>
                 </div>
                 <p className="flex justify-center font-bold mt-2 text-red-400">Warning: This process can not be reverted. Continue at your own risk.</p>
-                <div className="m-4 border-[#d4d1ce] border"></div>
+                <div className="m-4 border-[#d4d1ce] border" />
                 <p className="flex justify-center mt-4">Are you sure you want to continue?</p>
                 <div className="inline-flex flex justify-center w-full gap-x-6 mt-4">
                     <button

@@ -30,5 +30,4 @@ The airdrop tool is built to work seamlessly with the snapshot tool.
 
 Read our [Airdrop NFTs on Stargaze](https://kevin-k.gitbook.io/ibc-nfts-tools/guides/airdrop-nfts-on-stargaze) guide for more details.
 
-![Stargaze Airdrop Tool - Steps 1 & 2](https://ipfs.io/ipfs/bafybeicjxvux4d7iwniz7znkazqiueyq5yv6fh72osbghx2s4lt5uu54j4)
-![Stargaze Airdrop Tool - Steps 3 & 4](https://ipfs.io/ipfs/bafybeidi6hpea7nam6ilkgsp5eraqg2qzua627fipa7iw4upthkkh7zwmq)
+![Stargaze Airdrop Tool](https://ipfs.io/ipfs/bafybeicoi7vma6e3k5wxeoqhpdok4v36xjdk45cu5dmu5xjy5krabyt26a)
