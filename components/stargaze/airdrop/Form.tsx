@@ -16,8 +16,8 @@ const ContractTextbox: FunctionComponent<StateProps> = ({state, setState}) => {
                     <input
                         type="text"
                         spellCheck={false}
-                        value={state.contractAddress}
-                        onChange={(e) => setState({ contractAddress: e.target.value })}
+                        value={state.minterAddress}
+                        onChange={(e) => setState({ minterAddress: e.target.value })}
                         className="focus:ring-[#85ff89] focus:border-[#85ff89] block w-full pr-10 sm:text-sm border-gray-300"
                         placeholder="stars..."
                     />
@@ -37,28 +37,62 @@ const ContractTextbox: FunctionComponent<StateProps> = ({state, setState}) => {
 }
 
 const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
-    const queryContract = async () => {
-        setState({loading: true})
+
+    const getMinter = async () => {
         try {
             const client = await CosmWasmClient.connect(
                 `${ state.mainnet ? "https://rpc.stargaze-apis.com/" : "https://rpc.elgafar-1.stargaze-apis.com/"}`
             );
-            const configResponse = await client.queryContractSmart(state.contractAddress, {
-                config: {},
-            })
-            await handleContract(configResponse.sg721_address)
+            const minterResponse = await client.queryContractSmart(state.minterAddress, {
+                minter: {},
+            });
+            if(minterResponse.hasOwnProperty('minter')) return minterResponse.minter;
+            console.error(minterResponse);
+        } catch (e: any) {
+            console.error(e.message);
+        }
+        setState({alertSeverity: "error", alertMsg: "Unable to grab the minter contract address. Please enter the minter address instead of the SG-721."});
+        return;
+    }
+
+    const getSg721 = async () => {
+        const client = await CosmWasmClient.connect(
+            `${ state.mainnet ? "https://rpc.stargaze-apis.com/" : "https://rpc.elgafar-1.stargaze-apis.com/"}`
+        );
+        const configResponse = await client.queryContractSmart(state.minterAddress, {
+            config: {},
+        });
+        if(configResponse.hasOwnProperty('sg721_address')) return configResponse.sg721_address;
+        console.error(configResponse);
+        setState({alertSeverity: "error", alertMsg: "Unable to grab the SG-721 contract address. Please enter the SG-721 address instead of the Minter."});
+        return;
+    }
+
+    const queryContract = async () => {
+        setState({ loading: true });
+        try {
+            const sg721Address = await getSg721();
+            if(sg721Address) {
+                setState({ sg721Address: sg721Address });
+                await handleContract(sg721Address);
+            }
         } catch (e: any) {
             if(e.message.includes("Error parsing into type")){
                 try {
-                    await handleContract(state.contractAddress)
+                    const minterAddress = await getMinter();
+                    if(minterAddress) {
+                        await handleContract(state.minterAddress);
+                        setState({ sg721Address: state.minterAddress });
+                        setState({ minterAddress: minterAddress });
+                    }
                 } catch (e: any) {
-                    console.log(e.message)
-                    setState({loading: false, alertSeverity: "error", alertMsg: "Please check that you have entered the correct contract address."})
+                    console.log(e.message);
+                    setState({loading: false, alertSeverity: "error", alertMsg: "Please check that you have entered the correct contract address."});
                 }
             } else {
-                console.log(e.message);
-                let errorMsg: string = "";
-                if(e.message.includes("bech32"))  errorMsg = "Incorrect contract address. Please check you did not make any typos.";
+                console.error(e.message);
+                let errorMsg: string;
+                if(e.message.includes("bech32"))  errorMsg = "Incorrect contract address. Check to make sure you did not make any typos.";
                 else errorMsg = e.message;
                 setState({loading: false, alertSeverity: "error", alertMsg: errorMsg})
             }
@@ -68,11 +102,11 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
 
     const handleContract = async (sg721: string) => {
         const collectionInfo = await getCollectionInfo(sg721, state.mainnet);
-        if(collectionInfo.success) {
-            setState({ name: collectionInfo.name, numTokens: collectionInfo.numTokens, currentStep: 3});
-        } else {
+        if(!collectionInfo.success) {
             setState({loading: false, alertSeverity: "error", alertMsg: collectionInfo.message});
+            return;
         }
+        setState({ name: collectionInfo.name, numTokens: collectionInfo.numTokens, currentStep: 3});
     }
 
     return(

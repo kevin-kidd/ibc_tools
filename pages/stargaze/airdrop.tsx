@@ -23,8 +23,8 @@ const StargazeAirdrop: NextPage = () => {
             ...newState
         }),
         {
-            airdropList: [], contractAddress: "", mainnet: true, loading: false, indexOfAddress: 0,
-            currentStep: 1, alertSeverity: "", alertMsg: ""
+            airdropList: [], mainnet: true, loading: false, indexOfAddress: 0, minterAddress: "",
+            currentStep: 1, alertSeverity: "", alertMsg: "", dropFromInv: false, sg721Address: ""
         }
     )
 

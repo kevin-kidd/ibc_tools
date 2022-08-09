@@ -5,7 +5,6 @@ import {ChevronDownIcon} from "@heroicons/react/solid";
 import {useFilePicker} from "use-file-picker";
 import Papa from "papaparse";
 import {read, utils} from "xlsx";
-import airdrop from "../../../pages/stargaze/airdrop";
 
 const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
 
@@ -25,16 +24,30 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
 
     useEffect(() => {
 
-        const validateList = (airdropList: Recipient[]) => {
+        const validateList = (airdropList: Recipient[], airdropType: string) => {
             if(airdropList.length === 0) {
                 setState({ alertMsg: `Your airdrop list does not include any entries.`, alertSeverity: "error" });
                 return false;
             }
-            const indexOfEmptyAddress = airdropList.findIndex((recipient: Recipient) => recipient.address.length === 0);
+            const indexOfEmptyAddress = airdropList.findIndex((recipient: Recipient) => recipient.address === undefined || recipient.address.length === 0);
             if(indexOfEmptyAddress !== -1) {
-                setState({ alertMsg: `An address is missing from your airdrop list. Check line #${indexOfEmptyAddress}.`, alertSeverity: "error" });
+                setState({
+                    alertMsg: `An address is missing from your airdrop list. Check line #${indexOfEmptyAddress}.`,
+                    alertSeverity: "error"
+                });
                 return false;
             }
+            if(airdropType === "mint_for") {
+                const indexOfEmptyToken = airdropList.findIndex((recipient: Recipient) => recipient.token_id === undefined);
+                if(indexOfEmptyToken !== -1) {
+                    setState({
+                        alertMsg: `A token ID is missing from your airdrop list. Check line #${indexOfEmptyToken}. If you want to airdrop random tokens, please omit the address column from your sheet.`,
+                        alertSeverity: "error"
+                    })
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -43,6 +56,7 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                 let index;
                 if(list[0][0] === "address" && list[0][1] === "token_id") index = 0;
                 else if(list[0][1] === "address" && list[0][0] === "token_id") index = 1;
+                else if(list[0][0] === "address") index = 3;
                 setState({ indexOfAddress: index })
                 return index;
             } catch (e) {
@@ -73,9 +87,13 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                             setState({
                                 alertMsg: "Unable to find the 'address' column. Please make sure you have the same structure as the template file.",
                                 alertSeverity: "error"
-                            })
+                            });
                             return;
                         }
+                        let airdropType: string;
+                        if(indexOfAddress === 3) airdropType = "mint_to"
+                        else airdropType = "mint_for";
+                        setState({ airdropType: airdropType });
                         results.data.shift();
                         let airdropList: Recipient[] = [];
                         results.data.forEach((element: any) => {
@@ -91,7 +109,7 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                                 })
                             }
                         });
-                        if(!validateList(airdropList)) return;
+                        if(!validateList(airdropList, airdropType)) return;
                         const uniqueAmount = getUniqueAddresses(airdropList);
                         setState({ airdropList: airdropList, currentStep: 2, uniqueAmount: uniqueAmount });
                     }}
@@ -109,7 +127,20 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
                 const airdropList: Recipient[] = utils.sheet_to_json(worksheet);
-                if(!validateList(airdropList)) return;
+                const indexOfAddress = getIndexOfAddress(airdropList);
+                if(indexOfAddress === -1) {
+                    setState({
+                        alertMsg: "Unable to find the 'address' column. Please make sure you have the same structure as the template file.",
+                        alertSeverity: "error"
+                    });
+                    return;
+                }
+                let airdropType: string;
+                if(indexOfAddress === 3) airdropType = "mint_to"
+                else airdropType = "mint_for";
+                setState({ airdropType: airdropType });
+                if(!validateList(airdropList, airdropType)) return;
+
                 const uniqueAmount = getUniqueAddresses(airdropList);
                 setState({ airdropList: airdropList, currentStep: 2, uniqueAmount: uniqueAmount });
             } catch (e) {

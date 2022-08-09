@@ -4,7 +4,6 @@ import { MsgExecuteContractEncodeObject, coin, GasPrice } from "cosmwasm";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { toUtf8 } from '@cosmjs/encoding';
-import {classNames} from "../../../func/bot/helper";
 
 const AIRDROP_FEE = coin(0, 'ustars')
 const funds = parseInt(AIRDROP_FEE.amount) == 0 ? [] : [AIRDROP_FEE]
@@ -24,12 +23,30 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
         if(client === undefined) { setConnected(false); return }
         let executeContractMsgs: MsgExecuteContractEncodeObject[] = [];
         for(const transaction of transactions[currentTx - 1]){
-            const msg = { mint_to: { recipient: transaction.address } }
+            let msg: object;
+            if(state.airdropType === "mint_for") {
+                if(transaction.token_id === undefined) {
+                    setState({alertMsg: "You are missing at least one token ID in your airdrop list.", alertSeverity: "error"});
+                    return;
+                }
+                if(state.dropFromInv) msg = { transfer_nft: { recipient: transaction.address, token_id: transaction.token_id.toString() } }
+                else msg = { mint_for: { token_id: Number(transaction.token_id), recipient: transaction.address } };
+            } else {
+                msg = { mint_to: { recipient: transaction.address } };
+            }
+
+            let contractAddress: string;
+            if(state.dropFromInv) contractAddress = state.sg721Address
+            else contractAddress = state.minterAddress;
+
+            console.log(contractAddress);
+            console.log(msg);
+
             const executeContractMsg: MsgExecuteContractEncodeObject = {
                 typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
                 value: MsgExecuteContract.fromPartial({
                     sender: address,
-                    contract: state.contractAddress,
+                    contract: contractAddress,
                     msg: toUtf8(JSON.stringify(msg)),
                     funds,
                 }),
@@ -54,12 +71,15 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             }
         } catch (e: any) {
             console.error(e);
-            let errorMsg: string = "";
+            let errorMsg: string;
             if (e.message === "Request rejected") errorMsg = "The Keplr popup was rejected or closed.";
             else if(e.message.includes("addr_validate")) errorMsg = "One of the addresses in your airdrop list is not a valid address.";
             else if(e.message === "Failed to retrieve account from signer") errorMsg = "Failed to retrieve account from signer. Please reconnect Keplr and try again.";
             else if(e.message.includes("Sender is not an admin")) errorMsg = "You do not have permission to mint from this contract.";
-            else setState({ alertMsg: e.message, alertSeverity: "error" });
+            else if(e.message.includes("Unauthorized")) errorMsg = "You are attempting to transfer an NFT which you do not own.";
+            else if(e.message.includes("results::empty::Empty")) errorMsg = "You are attempting to transfer an NFT which has not been minted.";
+            else if(e.message.includes("already sold")) errorMsg = "You are attempting to mint an NFT which has already been minted.";
+            else errorMsg = e.message;
             setState({ alertMsg: errorMsg, alertSeverity: "error" });
         }
 
