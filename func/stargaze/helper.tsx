@@ -19,28 +19,31 @@ export const getCollectionInfo = async (sg721: string, mainnet: boolean) => {
 export const grabSnapshot = async (sg721: string) => {
     try {
         const client = await CosmWasmClient.connect("https://rpc.stargaze-apis.com/");
-        const numTokens = await client.queryContractSmart(sg721, {num_tokens: {}})
-        const contractInfo = await client.queryContractSmart(sg721, {contract_info: {}})
+        const contractInfo = await client.queryContractSmart(sg721, {contract_info: {}});
+        const minterResponse = await client.queryContractSmart(sg721, { minter: {}});
+        const configResponse = await client.queryContractSmart(minterResponse.minter, { config: {} });
 
+        let numTokens = configResponse.num_tokens;
         if (numTokens === 0) {
-            return { message: 'None of the tokens have been minted yet.', success: false }
+            return { message: 'Could not find any tokens in the collection.', success: false }
         }
 
-        let owners: Owner[] = [];
+        console.log(numTokens);
 
-        for (let i = 1; i <= numTokens.count; i++) {
+        let owners: Owner[] = [];
+        for (let i = 1; i <= numTokens; i++) {
             try {
-                const tmp = await client.queryContractSmart(sg721, {
+                const ownerOfToken = await client.queryContractSmart(sg721, {
                     owner_of: {
                         token_id: i.toString()
                     },
                 })
                 owners.push({
                     token_id: i.toString(),
-                    address: tmp.owner
+                    address: ownerOfToken.owner
                 })
             } catch (e: any) {
-                console.log(e.message)
+                if(!e.message.includes("not found")) console.error(e.message);
             }
         }
 
@@ -56,7 +59,7 @@ export const grabSnapshot = async (sg721: string) => {
 
         return {
             uniqueHolders: unique, name: contractInfo.name,
-            numTokens: numTokens.count, owners: owners, ownersToExport: owners, success: true
+            numTokens: owners.length, owners: owners, ownersToExport: owners, success: true
         }
 
     } catch (e: any) {
