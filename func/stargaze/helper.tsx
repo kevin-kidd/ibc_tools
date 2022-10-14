@@ -59,7 +59,7 @@ export const grabSnapshot = async (sg721: string) => {
 
         return {
             uniqueHolders: unique, name: contractInfo.name,
-            numTokens: owners.length, owners: owners, ownersToExport: owners, success: true
+            numTokens: owners.length.toString(), owners: owners, ownersToExport: owners, success: true
         }
 
     } catch (e: any) {
