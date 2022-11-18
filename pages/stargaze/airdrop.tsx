@@ -14,6 +14,7 @@ import FormCard from "../../components/stargaze/airdrop/FormCard";
 import Scroll from "react-scroll";
 import ConfirmationCard from "../../components/stargaze/airdrop/ConfirmationCard";
 import AirdropCard from "../../components/stargaze/airdrop/AirdropCard";
+import Image from "next/image";
 
 const StargazeAirdrop: NextPage = () => {
 
@@ -43,8 +44,6 @@ const StargazeAirdrop: NextPage = () => {
                 <title>Stargaze Airdrop Tool for the SG-721 NFT standard ✈️</title>
                 <meta name="description" content="IBCNFTs Stargaze Airdrop Tool allows you to bulk-send and/or mint SG-721 tokens (NFTs) in a simple step-by-step process. Quickly snapshot & airdrop with our tools." />
             </Head>
-            <img className="lg:hidden md:hidden" src="/assetmantle_mobile_banner.png" alt="banner" />
-            <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
             <Menu />
             <main className={styles.main}>
                 <div className={`max-w-7xl mx-auto lg:w-[50%] md:w-[60%] sm:w-3/4 w-5/6 h-full ${state.currentStep > 1 ? "md:mt-16 mt-20 mb-20" : "my-20 md:my-16"}`}>

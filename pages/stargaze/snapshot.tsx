@@ -11,6 +11,7 @@ import CollectionCard from "../../components/stargaze/snapshot/CollectionCard"
 import styles from "../../styles/Home.module.css";
 import {SnapshotState} from "../../types/snapshotTypes";
 import HoldersCard from "../../components/stargaze/snapshot/HoldersCard";
+import Image from "next/image";
 
 export const defaultConfig = {
     uniqueOnly: false,
@@ -38,8 +39,6 @@ const Snapshot: NextPage = () => {
                 <title>Stargaze Snapshot Tool for the SG-721 NFT standard 📸</title>
                 <meta name="description" content="Use IBCNFTs Stargaze Snapshot Tool in your NFT community to extract all the holders of any collection on the Stargaze blockchain." />
             </Head>
-            <img className="lg:hidden md:hidden" src="/assetmantle_mobile_banner.png" alt="banner" />
-            <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
             <Menu />
             <main className={styles.main}>
                 { state.owners.length === 0 ?

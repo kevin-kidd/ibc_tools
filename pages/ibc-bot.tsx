@@ -13,6 +13,7 @@ import Alert from "../components/Alert"
 import styles from '../styles/Home.module.css'
 // import collections from '../data/collections.json'
 import {classNames} from "../func/bot/helper";
+import Image from 'next/image';
 
 const IBCBot: NextPage<PageProps> = (props) => {
 
@@ -41,8 +42,6 @@ const IBCBot: NextPage<PageProps> = (props) => {
                 <title>Manage your community with Discord NFT verification! 🤖</title>
                 <meta name="description" content="IBC Bot is a Discord bot for community management, including NFT proof-of-ownership that allows you to verify NFT holders and tokenize your community." />
             </Head>
-            <img className="lg:hidden md:hidden" src="/assetmantle_mobile_banner.png" alt="banner" />
-            <img className="hidden lg:flex md:flex" src="/assetmantle_desktop_banner.png" alt="banner" />
             <Menu />
             <main className={styles.main}>
                 <Card setState={setState} state={state} />

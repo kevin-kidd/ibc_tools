@@ -3,6 +3,7 @@ import { Disclosure } from "@headlessui/react";
 import Dropdown from "./Dropdown";
 import Link from "next/link";
 import {MenuIcon, XIcon} from "@heroicons/react/solid";
+import Image from "next/image";
 
 const exploreDropdownItems = [
     { title: "All", link: "https://www.ibcnfts.com/ibc-nfts-explore", disabled: false },
@@ -35,6 +36,8 @@ const Menu: FunctionComponent = () => {
         <Disclosure as="nav" className="bg-white shadow-[1px_1px_13px_0_rgb(0,0,0,0.3)] relative">
             {({ open }) => (
                 <>
+                    <Image className="sm:hidden flex" src="/assetmantle_mobile_banner.png" width={2400} height={360} alt="banner" />
+                    <Image className="hidden sm:flex" src="/assetmantle_desktop_banner.png" width={2400} height={120} alt="banner" />
                     <div className="max-w-10xl mx-auto px-2 sm:px-4 lg:px-8">
                         <div className="container mx-auto">
                             <div className="flex justify-between h-17">
@@ -54,7 +57,7 @@ const Menu: FunctionComponent = () => {
                                         {
                                             menuItems.map((item) => {
                                                 return (
-                                                    <Link href={item.link} key={item.title}>
+                                                    <Link href={item.link} key={item.title} legacyBehavior={true}>
                                                         <a
                                                             className="whitespace-nowrap text-[#1d1d1d] hover:text-[#85ff89] inline-flex items-center px-1 pt-1 text-md font-normal"
                                                         >

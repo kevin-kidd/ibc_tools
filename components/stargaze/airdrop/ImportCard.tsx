@@ -22,7 +22,14 @@ const ImportCard: FunctionComponent<StateProps> = ({ state, setState }) => {
                 </div>
             </div>
             <div className="flex justify-between items-end mt-8">
-                <p className="text-[#686765] text-sm ml-2 mb-2">Note: Exported files from the <Link href="/stargaze/snapshot" target="_blank"><a className="hover:text-[#85ff89] text-black transition duration-150 font-bold">snapshot tool</a></Link> are compatible.</p>
+                <p className="text-[#686765] text-sm ml-2 mb-2">Note: Exported files from the 
+                    <Link href="/stargaze/snapshot" target="_blank">
+                        <span className="hover:text-[#85ff89] text-black transition duration-150 font-bold">
+                            snapshot tool
+                        </span>
+                    </Link> 
+                    are compatible.
+                </p>
                 <p className="text-[#686765] text-lg mb-2 mr-2">Step 1</p>
             </div>
         </div>
