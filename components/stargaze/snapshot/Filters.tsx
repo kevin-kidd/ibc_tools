@@ -27,10 +27,16 @@ const Filters: FunctionComponent<StateProps> = ({ state, setState }) => {
       if (uniqueOnly) filteredOwners = state.uniqueHolders;
       if (config.tokenAmount.min !== -1 || config.tokenAmount.max !== -1) {
         let localMin: number, localMax: number;
-        if (config.tokenAmount.min <= 0) localMin = 1;
-        else localMin = config.tokenAmount.min;
-        if (config.tokenAmount.max <= 0) localMax = localMin;
-        else localMax = config.tokenAmount.max;
+        if (config.tokenAmount.min <= 0) {
+          localMin = 1;
+        } else {
+          localMin = config.tokenAmount.min as number;
+        }
+        if (config.tokenAmount.max <= 0) {
+          localMax = localMin;
+        } else {
+          localMax = config.tokenAmount.max as number;
+        }
         if (filteredOwners.length === 0) {
           filteredOwners = state.owners;
         }
