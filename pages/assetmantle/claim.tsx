@@ -13,40 +13,52 @@ import { Quests } from "../../components/assetmantle/Quests";
 export type QuestData = {
   name: string;
   title: string;
+  description: string;
   reward: {
     type: string;
     amount: number;
+    name: string;
   };
-  complete: boolean;
+  started: boolean;
+  completed: boolean;
 };
 
 const questsData = [
   {
     name: "mantle-profile",
     title: "Create a MantlePlace profile",
+    description: "Simply signup to MantlePlace to claim your reward.",
     reward: {
       type: "tokens",
+      name: "$MNTL",
       amount: 10000,
     },
-    complete: true,
+    started: true,
+    completed: true,
   },
   {
     name: "mint-3",
     title: "Mint three NFTs on MantlePlace",
+    description: "Mint three NFTs on MantlePlace to claim your reward.",
     reward: {
       type: "free-mint",
+      name: "Free Mint",
       amount: 1,
     },
-    complete: false,
+    started: true,
+    completed: false,
   },
   {
     name: "mint-10",
     title: "Mint ten NFTs on MantlePlace",
+    description: "Mint ten NFTs on MantlePlace to claim your reward.",
     reward: {
       type: "whitelist",
+      name: "Whitelist Spot",
       amount: 1,
     },
-    complete: false,
+    started: false,
+    completed: false,
   },
 ];
 
@@ -110,7 +122,7 @@ const ClaimPage: NextPage = () => {
   const totalCompleted: number = useMemo(() => {
     let total = 0;
     questsData.forEach((questData: QuestData) => {
-      if (questData.complete) total += 1;
+      if (questData.completed) total += 1;
     });
     return total;
   }, []);
@@ -172,7 +184,7 @@ const ClaimPage: NextPage = () => {
           )}
         </section>
         {connected && address && (
-          <section className="main-card py-10 px-8 flex flex-col items-center mb-10 w-[95%] max-w-3xl">
+          <section className="main-card py-10 sm:px-4 lg:px-8 flex flex-col items-center mb-12 w-[95%] max-w-3xl">
             <h2 className="text-black font-bold text-3xl">
               COMPLETE QUESTS & EARN
             </h2>
