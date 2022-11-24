@@ -17,7 +17,7 @@ const SelectNetwork: FunctionComponent<StateProps> = (props) => {
               Select a network...
             </Listbox.Label>
             <div className="mt-1 relative">
-              <Listbox.Button className="bg-white relative shadow-lg w-full border border-gray-300 shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none hover:ring-1 hover:ring-lightgreen hover:border-1 hover:border-lightgreen sm:text-sm">
+              <Listbox.Button className="bg-white relative shadow-lg w-full border border-gray-300 pl-3 pr-10 py-2 text-left cursor-default focus:outline-none hover:ring-1 hover:ring-lightgreen hover:border-1 hover:border-lightgreen sm:text-sm">
                 <span className="block truncate">
                   {props.state.currentNetwork.name}
                 </span>
@@ -57,7 +57,7 @@ const SelectNetwork: FunctionComponent<StateProps> = (props) => {
                         className={classNames(
                           network.disabled
                             ? "text-[#64748b]"
-                            : "text-black group-hover:text-lightgreen"
+                            : "text-black group-hover:text-[#85ff89]"
                         )}
                       >
                         {network.name}

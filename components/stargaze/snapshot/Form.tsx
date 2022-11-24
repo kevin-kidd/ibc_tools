@@ -65,8 +65,9 @@ const Form: FunctionComponent<StateProps> = (props) => {
   const grabData = async (sg721: string) => {
     const snapshot = await grabSnapshot(sg721);
     if (snapshot.success) {
-      setState(snapshot); // @ts-ignore
-      setState({ pageOfOwners: snapshot.ownersToExport.slice(0, 10) });
+      setState(snapshot);
+      if (snapshot.ownersToExport)
+        setState({ pageOfOwners: snapshot.ownersToExport.slice(0, 10) });
     } else {
       setState({ alertSeverity: "error", alertMsg: snapshot.message });
     }

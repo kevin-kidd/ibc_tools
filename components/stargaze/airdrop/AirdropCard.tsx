@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { useEffect, useState } from "react";
 import type { Recipient, StateProps } from "../../../types/airdrop";
 import type { MsgExecuteContractEncodeObject } from "cosmwasm";
@@ -122,9 +122,7 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
 
     setState({ loading: false });
   };
-
-  let connectKeplr: () => Promise<boolean>;
-  connectKeplr = async () => {
+  const connectKeplr = useCallback(async () => {
     let success: boolean;
     try {
       let rpcEndpoint: string, chainId: string;
@@ -136,8 +134,7 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
         chainId = "elgafar-1";
       }
 
-      // @ts-ignore
-      if (!window.keplr) {
+      if (!window.keplr || !window.getOfflineSignerAuto) {
         setState({
           alertMsg: "Unable to detect the Keplr extension.",
           alertSeverity: "error",
@@ -145,7 +142,6 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
         return false;
       }
 
-      // @ts-ignore
       await window.keplr.enable(chainId).catch(() => {
         setState({
           alertMsg: `Unable to connect to the chain: ${chainId}`,
@@ -154,14 +150,13 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
         return false;
       });
 
-      // @ts-ignore
       const offlineSigner = await window.getOfflineSignerAuto(chainId);
       const accounts = await offlineSigner.getAccounts();
       const signingClient = await SigningCosmWasmClient.connectWithSigner(
         rpcEndpoint,
         offlineSigner,
         {
-          prefix: "wasm", // @ts-ignore
+          prefix: "wasm",
           gasPrice: GasPrice.fromString("1000ustars"),
         }
       );
@@ -191,7 +186,7 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
       setTransactions(newTransactions);
     }
     return true;
-  };
+  }, [setState, state.airdropList, state.mainnet, txAmount]);
 
   useEffect(() => {
     if (!connected && localStorage.getItem("connected") !== null) {
@@ -245,12 +240,10 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
             disabled={index + 1 !== currentTx || remainingNFTs === 0}
             onClick={execTransaction}
             className={`px-4 py-2 bg-lightyellow button-dropshadow text-black font-bold inline-flex
-                                ${
-                                  index + 1 < currentTx ? "bg-lightgreen" : null
-                                }
-                                ${remainingNFTs === 0 ? "bg-lightgreen" : null}
-                                ${index + 1 > currentTx ? "bg-[#d4d1ce]" : null}
-                            `}
+              ${index + 1 < currentTx ? "bg-lightgreen" : null}
+              ${remainingNFTs === 0 ? "bg-lightgreen" : null}
+              ${index + 1 > currentTx ? "bg-[#d4d1ce]" : null}
+            `}
           >
             <svg
               className={`${

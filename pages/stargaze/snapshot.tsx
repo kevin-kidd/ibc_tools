@@ -11,7 +11,6 @@ import CollectionCard from "../../components/stargaze/snapshot/CollectionCard";
 import styles from "../../styles/Home.module.css";
 import type { SnapshotState } from "../../types/snapshot";
 import HoldersCard from "../../components/stargaze/snapshot/HoldersCard";
-import Image from "next/image";
 
 export const defaultConfig = {
   uniqueOnly: false,

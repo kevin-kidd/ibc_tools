@@ -96,7 +96,9 @@ const Menu: FunctionComponent = () => {
               <div className="flex justify-between h-17">
                 <div className="flex px-2 lg:px-0 basis-1/4">
                   <div className="flex-shrink-0 flex items-center lg:ml-28">
-                    <img
+                    <Image
+                      width={50}
+                      height={50}
                       className="block h-12 w-auto"
                       src="/logo.png"
                       alt="IBCNFTs"

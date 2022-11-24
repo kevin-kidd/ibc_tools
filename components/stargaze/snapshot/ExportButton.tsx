@@ -7,7 +7,7 @@ import { CSVLink } from "react-csv";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
 const ExportButton: FunctionComponent<StateProps> = (props) => {
-  const csvLink = useRef();
+  const csvLink = useRef<any>();
 
   const exportXLSX = () => {
     const sheet = utils.json_to_sheet(props.state.ownersToExport);
@@ -21,8 +21,7 @@ const ExportButton: FunctionComponent<StateProps> = (props) => {
   };
 
   const exportCSV = () => {
-    // @ts-ignore
-    csvLink.current.link.click();
+    if (csvLink.current) csvLink.current.link.click;
   };
 
   const exportJSON = () => {
@@ -42,7 +41,6 @@ const ExportButton: FunctionComponent<StateProps> = (props) => {
   return (
     <Menu as="div" className="relative inline-block text-left z-20">
       <CSVLink
-        // @ts-ignore
         ref={csvLink}
         data={props.state.ownersToExport}
         filename="snapshot.csv"
@@ -51,12 +49,8 @@ const ExportButton: FunctionComponent<StateProps> = (props) => {
       />
       <div>
         <Menu.Button
-          className="inline-flex justify-center w-full focus:outline-none
-                font-extrabold inline-flex
-                         border-[#1d1d1d] border button-dropshadow transition duration-200
-                         text-md bg-lightyellow px-4 py-1 mr-2 focus:outline-none
-
-                "
+          className="justify-center w-full font-extrabold inline-flex border-[#1d1d1d] border button-dropshadow 
+            transition duration-200 text-md bg-lightyellow px-4 py-1 mr-2 focus:outline-none"
         >
           <ChevronDownIcon
             className="-ml-1 mr-2 mt-0.5 h-5 w-5"

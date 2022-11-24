@@ -10,6 +10,8 @@ const ImportCard: FunctionComponent<StateProps> = ({ state, setState }) => {
       <Image
         className="border border-[#f3eee9] h-60 object-cover w-full"
         src="/background.svg"
+        width={800}
+        height={400}
         alt="IBC NFTs"
       />
       <div className="grid xl:grid-cols-4 mb-4 ml-10 mt-10">

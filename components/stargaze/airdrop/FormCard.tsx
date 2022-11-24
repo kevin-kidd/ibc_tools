@@ -24,8 +24,8 @@ const InventoryToggle: FunctionComponent<StateProps> = ({
           />
           <div
             className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-checked:after:translate-x-full after:w-5
-                            peer-checked:after:border-white after:absolute after:top-0.5 after:left-[2px] after:bg-white after:h-5
-                            after:border-gray-300 after:border after:transition-all dark:border-gray-600 peer-checked:bg-lightblue"
+            peer-checked:after:border-white after:absolute after:top-0.5 after:left-[2px] after:bg-white after:h-5
+            after:border-gray-300 after:border after:transition-all dark:border-gray-600 peer-checked:bg-lightblue"
           ></div>
           <span className="ml-3 text-sm md:text-base font-bold text-[#686765]">
             Drop from {state.dropFromInv ? "inventory" : "contract"}
@@ -55,8 +55,8 @@ const NetworkToggle: FunctionComponent<StateProps> = ({ state, setState }) => {
         />
         <div
           className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-checked:after:translate-x-full after:w-5
-                            peer-checked:after:border-white after:absolute after:top-0.5 after:left-[2px] after:bg-white after:h-5
-                            after:border-gray-300 after:border after:transition-all dark:border-gray-600 peer-checked:bg-lightblue"
+            peer-checked:after:border-white after:absolute after:top-0.5 after:left-[2px] after:bg-white after:h-5
+            after:border-gray-300 after:border after:transition-all dark:border-gray-600 peer-checked:bg-lightblue"
         ></div>
         <span className="ml-3 text-sm md:text-base font-bold text-[#686765]">
           {state.mainnet ? "Mainnet" : "Testnet"}

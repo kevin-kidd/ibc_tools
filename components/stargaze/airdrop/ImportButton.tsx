@@ -7,7 +7,7 @@ import { useFilePicker } from "use-file-picker";
 import Papa from "papaparse";
 import { read, utils } from "xlsx";
 
-const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
+const ImportButton: FunctionComponent<StateProps> = ({ setState }) => {
   const [openXLSXSelector, xlsxFile] = useFilePicker({
     multiple: false,
     readAs: "ArrayBuffer",
@@ -87,7 +87,6 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
 
     const handleCSV = (csvData: string) => {
       try {
-        // @ts-ignore
         Papa.parse(csvData, {
           complete: function (results: any) {
             const indexOfAddress = getIndexOfAddress(results.data);
@@ -177,24 +176,21 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
       if (csvFile.filesContent.length > 0) {
         const file = csvFile.filesContent[0];
         if (file.hasOwnProperty("name")) {
-          // @ts-ignore
-          const content: string = file.content;
-          if (file.name.includes(".csv")) handleCSV(content);
+          if (file.name.includes(".csv")) handleCSV(file.content);
           else
             setState({
-              alertMsg: `File type is not supported.`,
+              alertMsg: `File type not supported.`,
               alertSeverity: "error",
             });
         }
       } else if (xlsxFile.filesContent.length > 0) {
         const file = xlsxFile.filesContent[0];
         if (file.hasOwnProperty("name")) {
-          // @ts-ignore
-          const content: ArrayBuffer = file.content;
+          const content: ArrayBuffer = file.content as unknown as ArrayBuffer;
           if (file.name.includes(".xlsx")) handleXLSX(content);
           else
             setState({
-              alertMsg: `File type is not supported.`,
+              alertMsg: `File type not supported.`,
               alertSeverity: "error",
             });
         }
@@ -213,12 +209,8 @@ const ImportButton: FunctionComponent<StateProps> = ({ state, setState }) => {
     <Menu as="div" className="relative inline-block text-left z-20">
       <div>
         <Menu.Button
-          className="inline-flex justify-center w-full focus:outline-none
-                font-extrabold inline-flex
-                         border-[#1d1d1d] border button-dropshadow transition duration-200
-                         text-md bg-lightyellow px-4 py-1 mr-2 focus:outline-none
-
-                "
+          className="justify-center w-full font-extrabold inline-flex border-[#1d1d1d] border button-dropshadow 
+          transition duration-200 text-md bg-lightyellow px-4 py-1 mr-2 focus:outline-none"
         >
           <ChevronDownIcon
             className="-ml-1 mr-2 mt-0.5 h-5 w-5"

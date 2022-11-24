@@ -18,7 +18,7 @@ const SelectCollection: FunctionComponent<StateProps> = (props) => {
               Select a collection...
             </Listbox.Label>
             <div className="mt-1 relative">
-              <Listbox.Button className="bg-white relative shadow-lg w-full border border-gray-300 shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none hover:ring-1 hover:ring-lightgreen hover:border-1 hover:border-lightgreen sm:text-sm">
+              <Listbox.Button className="bg-white relative shadow-lg w-full border border-gray-300 pl-3 pr-10 py-2 text-left cursor-default focus:outline-none hover:ring-1 hover:ring-lightgreen hover:border-1 hover:border-lightgreen sm:text-sm">
                 <span className="block truncate">
                   {props.state.currentCollection.name}
                 </span>

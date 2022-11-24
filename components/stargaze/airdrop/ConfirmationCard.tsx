@@ -17,15 +17,13 @@ const ConfirmationCard: FunctionComponent<StateProps> = ({
       </div>
       <div className="m-4 border-[#d4d1ce] border" />
       <div className="flex justify-center mt-2">
-        <p>{`You are about to airdrop
-                    ${state.airdropList.length}
-                    tokens to
-                    ${
-                      state.uniqueAmount === undefined
-                        ? "?"
-                        : state.uniqueAmount.toString()
-                    }
-                    unique addresses.`}</p>
+        <p>
+          {`You are about to airdrop ${state.airdropList.length} tokens to ${
+            state.uniqueAmount === undefined
+              ? "?"
+              : state.uniqueAmount.toString()
+          } unique addresses.`}
+        </p>
       </div>
       <p className="flex justify-center font-bold mt-2 text-red-400">
         Warning: This process can not be reverted. Continue at your own risk.
