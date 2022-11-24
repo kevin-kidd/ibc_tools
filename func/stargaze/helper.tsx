@@ -1,5 +1,5 @@
 import {CosmWasmClient} from "cosmwasm";
-import {Owner} from "../../types/snapshotTypes";
+import {Owner} from "../../types/snapshot";
 
 export const getCollectionInfo = async (sg721: string, mainnet: boolean) => {
     try {

@@ -1,0 +1,11 @@
+.idea/.gitignore
+.idea/ibc_tools_old.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
+.next/*
+.DS_Store
+node_modules/*
+yarn.lock
+.env
+.eslintrc.json

@@ -1,5 +1,5 @@
 import {SecretNetworkClient, MsgExecuteContract} from "secretjs"
-import { Contract } from "../../types/botTypes";
+import { Contract } from "../../types/bot";
 
 const SCRT_GRPC_URL = "https://secret-4.api.trivium.network:9091"
 const SCRT_CHAIN_ID="secret-4"

@@ -10,6 +10,11 @@ module.exports = {
       spacing: {
         '17': '4.25rem',
         '68': '68px'
+      },
+      colors: {
+        "lightblue": "#85f0ff",
+        "lightgreen": "#85ff89",
+        "lightyellow": "#fff985"
       }
     },
   },
