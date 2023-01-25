@@ -226,7 +226,7 @@ const ClaimPage: NextPage<{ bounties: Bounty[] }> = ({ bounties }) => {
 
 export const getServerSideProps = async () => {
   const data = (await ky
-    .get(BOUNTIES_ENDPOINT + "/bounties/programs?full=true")
+    .get(BOUNTIES_ENDPOINT + "bounties/programs?full=true")
     .json()) as Array<Program>;
   const mantlePlaceProgram = data.find(
     (program: Program) => program.name === "mantlePlace"
