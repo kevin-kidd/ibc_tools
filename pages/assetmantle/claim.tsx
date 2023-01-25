@@ -1,70 +1,27 @@
 import type { NextPage } from "next";
+import React from "react";
 import Head from "next/head";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useMemo, useReducer, useState } from "react";
 import Alert from "../../components/Alert";
 import Menu from "../../components/menu/Menu";
-import { classNames } from "../../func/bot/helper";
+import { classNames } from "../../utils/bot/helper";
 import styles from "../../styles/AssetMantleClaim.module.css";
 import Scroll from "react-scroll";
-import type { MantleClaimState } from "../../types/mantleClaim";
+import type {
+  Bounty,
+  MantleClaimState,
+  Program,
+} from "../../types/mantleClaim";
 import Image from "next/image";
-import { Quests } from "../../components/assetmantle/Quests";
+import { Bounties } from "../../components/assetmantle/Bounties";
+import { getPermit } from "../../utils/assetmantle/helper";
+import ky from "ky";
+import type { AminoSignResponse } from "cosmwasm";
 
-export type QuestData = {
-  name: string;
-  title: string;
-  description: string;
-  reward: {
-    type: string;
-    amount: number;
-    name: string;
-  };
-  started: boolean;
-  completed: boolean;
-};
-
-const questsData = [
-  {
-    name: "mantle-profile",
-    title: "Create a MantlePlace profile",
-    description: "Simply signup to MantlePlace to claim your reward.",
-    reward: {
-      type: "tokens",
-      name: "$MNTL",
-      amount: 10000,
-    },
-    started: true,
-    completed: true,
-  },
-  {
-    name: "mint-3",
-    title: "Mint three NFTs on MantlePlace",
-    description: "Mint three NFTs on MantlePlace to claim your reward.",
-    reward: {
-      type: "free-mint",
-      name: "Free Mint",
-      amount: 1,
-    },
-    started: true,
-    completed: false,
-  },
-  {
-    name: "mint-10",
-    title: "Mint ten NFTs on MantlePlace",
-    description: "Mint ten NFTs on MantlePlace to claim your reward.",
-    reward: {
-      type: "whitelist",
-      name: "Whitelist Spot",
-      amount: 1,
-    },
-    started: false,
-    completed: false,
-  },
-];
-
-const ClaimPage: NextPage = () => {
+const ClaimPage: NextPage<{ bounties: Bounty[] }> = ({ bounties }) => {
   const [connected, setConnected] = useState<boolean>(false);
   const [address, setAddress] = useState<string>();
+  const [connecting, setConnecting] = useState(false);
 
   const [state, setState] = useReducer(
     (state: MantleClaimState, newState: Partial<MantleClaimState>) => ({
@@ -79,53 +36,78 @@ const ClaimPage: NextPage = () => {
   );
 
   const handleConnect = async () => {
+    setConnecting(true);
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    while (
+      !window.keplr ||
+      !window.getEnigmaUtils ||
+      !window.getOfflineSignerOnlyAmino
+    ) {
+      await sleep(50);
+    }
+    let permit: AminoSignResponse | undefined;
     try {
-      const sleep = (ms: number) =>
-        new Promise((resolve) => setTimeout(resolve, ms));
-      while (
-        !window.keplr ||
-        !window.getEnigmaUtils ||
-        !window.getOfflineSignerOnlyAmino
-      ) {
-        await sleep(50);
-      }
       await window.keplr.enable("mantle-1");
       const keplrOfflineSigner = window.getOfflineSignerOnlyAmino("mantle-1");
-      const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
-      setAddress(myAddress);
-      setConnected(true);
+      const [{ address }] = await keplrOfflineSigner.getAccounts();
+      permit = await getPermit();
+      setAddress(address);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setState({ alertMsg: error.message, alertSeverity: "error" });
+        setConnecting(false);
       } else {
         setState({
           alertMsg: "Failed to connect to Keplr.",
           alertSeverity: "error",
         });
+        setConnecting(false);
       }
     }
+    ky.post("http://localhost:3001/auth/signIn", {
+      json: {
+        permit: permit,
+      },
+      credentials: "include",
+    })
+      .then((response) => {
+        if (response.ok) {
+          for (const bounty of bounties) {
+            ky.get(`http://localhost:3001/bounties/${bounties[0]._id}/status`, {
+              credentials: "include",
+            })
+              .then((response) =>
+                response.ok
+                  ? (bounty.status = "completed")
+                  : (bounty.status = undefined)
+              )
+              .catch((error) => console.error(error));
+            bounty.startUrl = "https://marketplace.assetmantle.one/";
+          }
+          setConnecting(false);
+          setConnected(true);
+          const scroll = Scroll.animateScroll;
+          scroll.scrollToBottom({ smooth: true });
+        }
+      })
+      .catch((error) => {
+        setState({
+          alertMsg: "Failed to connect. Please try again later.",
+          alertSeverity: "error",
+        });
+        setConnecting(false);
+        console.error(error);
+      });
   };
-
-  useEffect(() => {
-    if (connected) {
-      const scroll = Scroll.animateScroll;
-      scroll.scrollToBottom({ smooth: true });
-    }
-  }, [connected]);
-
-  useEffect(() => {
-    if (localStorage.getItem("connected")) {
-      handleConnect();
-    }
-  }, []);
 
   const totalCompleted: number = useMemo(() => {
     let total = 0;
-    questsData.forEach((questData: QuestData) => {
-      if (questData.completed) total += 1;
+    bounties.forEach((bounty: Bounty) => {
+      if (bounty.status === "completed") total += 1;
     });
     return total;
-  }, []);
+  }, [bounties]);
 
   const encouragingMessage: string = useMemo(() => {
     if (totalCompleted === 0) return "Get Started.";
@@ -176,9 +158,33 @@ const ClaimPage: NextPage = () => {
               </p>
               <button
                 onClick={handleConnect}
-                className="w-fit px-4 py-2 bg-lightyellow transition duration-150 button-dropshadow text-black font-bold"
+                disabled={connecting}
+                className="w-fit px-4 py-2 bg-lightyellow transition duration-150
+                  button-dropshadow text-black font-bold flex gap-1 items-center"
               >
                 Connect Keplr
+                {connecting && (
+                  <svg
+                    className="animate-spin h-5 w-5 text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
               </button>
             </>
           )}
@@ -189,16 +195,16 @@ const ClaimPage: NextPage = () => {
               COMPLETE QUESTS & EARN
             </h2>
             <h3 className="text-black text-lg my-6">
-              {totalCompleted} of {questsData.length} Quests Completed -{" "}
+              {totalCompleted} of {bounties.length} Quests Completed -{" "}
               {encouragingMessage}
             </h3>
-            <Quests questsData={questsData} />
+            <Bounties bounties={bounties} setState={setState} />
           </section>
         )}
         <div
           className={classNames(
             state.alertMsg !== ""
-              ? "fixed bottom-5 right-1 lg:right-5"
+              ? "fixed bottom-5 right-1 lg:right-5 z-50"
               : "hidden"
           )}
         >
@@ -213,6 +219,28 @@ const ClaimPage: NextPage = () => {
       </main>
     </>
   );
+};
+
+export const getServerSideProps = async () => {
+  const data = (await ky
+    .get("https://api.rarity.ibcnfts.com/bounties/programs?full=true")
+    .json()) as Array<Program>;
+  const mantlePlaceProgram = data.find(
+    (program: Program) => program.name === "mantlePlace"
+  );
+  if (mantlePlaceProgram) {
+    return {
+      props: {
+        bounties: mantlePlaceProgram.bounties,
+      },
+    };
+  } else {
+    return {
+      props: {
+        bounties: null,
+      },
+    };
+  }
 };
 
 export default ClaimPage;

@@ -1,9 +1,9 @@
 import type { FunctionComponent } from "react";
 import { CosmWasmClient } from "cosmwasm";
-import { classNames } from "../../../func/bot/helper";
+import { classNames } from "../../../utils/bot/helper";
 import type { StateProps } from "../../../types/airdrop";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
-import { getCollectionInfo } from "../../../func/stargaze/helper";
+import { getCollectionInfo } from "../../../utils/stargaze/helper";
 
 const ContractTextbox: FunctionComponent<StateProps> = ({
   state,

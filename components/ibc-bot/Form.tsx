@@ -2,8 +2,8 @@ import type { FunctionComponent } from "react";
 import SelectCollection from "./SelectCollection";
 import DiscordTextbox from "./DiscordTextbox";
 import type { StateProps } from "../../types/bot";
-import { classNames, postData } from "../../func/bot/helper";
-import { getClient, getPermit, setWhitelist } from "../../func/bot/keplr";
+import { classNames, postData } from "../../utils/bot/helper";
+import { getClient, getPermit, setWhitelist } from "../../utils/bot/keplr";
 
 const Form: FunctionComponent<StateProps> = (props) => {
   const [state, setState] = [props.state, props.setState];

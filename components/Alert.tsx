@@ -4,7 +4,7 @@ import {
   ExclamationCircleIcon,
   XIcon,
 } from "@heroicons/react/solid";
-import { classNames } from "../func/bot/helper";
+import { classNames } from "../utils/bot/helper";
 
 type AlertProps = {
   alertMsg: string;

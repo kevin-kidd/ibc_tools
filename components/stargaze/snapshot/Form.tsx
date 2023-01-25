@@ -1,8 +1,8 @@
 import type { FunctionComponent } from "react";
 import { CosmWasmClient } from "cosmwasm";
-import { classNames } from "../../../func/bot/helper";
+import { classNames } from "../../../utils/bot/helper";
 import type { StateProps } from "../../../types/snapshot";
-import { grabSnapshot } from "../../../func/stargaze/helper";
+import { grabSnapshot } from "../../../utils/stargaze/helper";
 import {
   ExclamationCircleIcon,
   QuestionMarkCircleIcon,

@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useReducer } from "react";
 import type { BotState, PageProps } from "../types/bot";
-import { mongoConnect } from "../func/bot/db";
+import { mongoConnect } from "../utils/bot/db";
 
 // Components
 import Menu from "../components/menu/Menu";
@@ -12,7 +12,7 @@ import Alert from "../components/Alert";
 // Assets
 import styles from "../styles/Home.module.css";
 // import collections from '../data/collections.json'
-import { classNames } from "../func/bot/helper";
+import { classNames } from "../utils/bot/helper";
 
 const IBCBot: NextPage<PageProps> = (props) => {
   const [state, setState] = useReducer(

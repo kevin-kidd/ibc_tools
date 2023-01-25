@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import type { StateProps } from "../../types/bot";
-import { classNames } from "../../func/bot/helper";
+import { classNames } from "../../utils/bot/helper";
 
 const SelectCollection: FunctionComponent<StateProps> = (props) => {
   return (

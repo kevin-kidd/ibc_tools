@@ -8,7 +8,7 @@ import Menu from "../../components/menu/Menu";
 import Head from "next/head";
 import ImportCard from "../../components/stargaze/airdrop/ImportCard";
 import { Transition } from "@headlessui/react";
-import { classNames } from "../../func/bot/helper";
+import { classNames } from "../../utils/bot/helper";
 import Alert from "../../components/Alert";
 import FormCard from "../../components/stargaze/airdrop/FormCard";
 import Scroll from "react-scroll";

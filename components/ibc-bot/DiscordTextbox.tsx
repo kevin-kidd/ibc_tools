@@ -4,7 +4,7 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/solid";
 import type { StateProps } from "../../types/bot";
-import { classNames } from "../../func/bot/helper";
+import { classNames } from "../../utils/bot/helper";
 
 const DiscordTextbox: FunctionComponent<StateProps> = (props) => {
   const [state, setState] = [props.state, props.setState];
