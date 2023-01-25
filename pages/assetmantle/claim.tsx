@@ -13,7 +13,10 @@ import type {
   Program,
 } from "../../types/mantleClaim";
 import Image from "next/image";
-import { Bounties } from "../../components/assetmantle/Bounties";
+import {
+  Bounties,
+  BOUNTIES_ENDPOINT,
+} from "../../components/assetmantle/Bounties";
 import { getPermit } from "../../utils/assetmantle/helper";
 import ky from "ky";
 import type { AminoSignResponse } from "cosmwasm";
@@ -65,7 +68,7 @@ const ClaimPage: NextPage<{ bounties: Bounty[] }> = ({ bounties }) => {
         setConnecting(false);
       }
     }
-    ky.post("http://localhost:3001/auth/signIn", {
+    ky.post(BOUNTIES_ENDPOINT + "auth/signIn", {
       json: {
         permit: permit,
       },
@@ -74,7 +77,7 @@ const ClaimPage: NextPage<{ bounties: Bounty[] }> = ({ bounties }) => {
       .then((response) => {
         if (response.ok) {
           for (const bounty of bounties) {
-            ky.get(`http://localhost:3001/bounties/${bounties[0]._id}/status`, {
+            ky.get(`${BOUNTIES_ENDPOINT}bounties/${bounties[0]._id}/status`, {
               credentials: "include",
             })
               .then((response) =>
@@ -223,7 +226,7 @@ const ClaimPage: NextPage<{ bounties: Bounty[] }> = ({ bounties }) => {
 
 export const getServerSideProps = async () => {
   const data = (await ky
-    .get("https://api.rarity.ibcnfts.com/bounties/programs?full=true")
+    .get(BOUNTIES_ENDPOINT + "/bounties/programs?full=true")
     .json()) as Array<Program>;
   const mantlePlaceProgram = data.find(
     (program: Program) => program.name === "mantlePlace"

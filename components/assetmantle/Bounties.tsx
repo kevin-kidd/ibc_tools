@@ -6,18 +6,17 @@ import ky from "ky";
 import Link from "next/link";
 import type { Bounty, MantleClaimState } from "../../types/mantleClaim";
 
+export const BOUNTIES_ENDPOINT = "https://api.rarity.ibcnfts.com/";
+
 export const Bounties: FunctionComponent<{
   bounties: Bounty[];
   setState: Dispatch<Partial<MantleClaimState>>;
 }> = ({ bounties, setState }) => {
   const handleClaim = async (bounty: Bounty) => {
     try {
-      const claimResponse = await ky.post(
-        "https://api.rarity.ibcnfts.com/bounties/" + bounty._id,
-        {
-          credentials: "include",
-        }
-      );
+      const claimResponse = await ky.post(BOUNTIES_ENDPOINT + bounty._id, {
+        credentials: "include",
+      });
       console.log(claimResponse);
       if (claimResponse.ok) {
         setState({
