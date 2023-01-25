@@ -13,7 +13,7 @@ export const Bounties: FunctionComponent<{
   const handleClaim = async (bounty: Bounty) => {
     try {
       const claimResponse = await ky.post(
-        "http://localhost:3001/bounties/" + bounty._id,
+        "https://api.rarity.ibcnfts.com/bounties/" + bounty._id,
         {
           credentials: "include",
         }
