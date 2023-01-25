@@ -61,10 +61,13 @@ const ImportButton: FunctionComponent<StateProps> = ({ setState }) => {
     const getIndexOfAddress = (list: any) => {
       try {
         let index;
-        if (list[0][0] === "address" && list[0][1] === "token_id") index = 0;
-        else if (list[0][1] === "address" && list[0][0] === "token_id")
+        if (list[0][0] === "address" && list[0][1] === "token_id") {
+          index = 0;
+        } else if (list[0][1] === "address" && list[0][0] === "token_id") {
           index = 1;
-        else if (list[0][0] === "address") index = 3;
+        } else if (list[0][0] === "address") {
+          index = 3;
+        }
         setState({ indexOfAddress: index });
         return index;
       } catch (e) {

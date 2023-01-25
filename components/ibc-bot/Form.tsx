@@ -4,6 +4,7 @@ import DiscordTextbox from "./DiscordTextbox";
 import type { StateProps } from "../../types/bot";
 import { classNames, postData } from "../../utils/bot/helper";
 import { getClient, getPermit, setWhitelist } from "../../utils/bot/keplr";
+import { AxiosError } from "axios";
 
 const Form: FunctionComponent<StateProps> = (props) => {
   const [state, setState] = [props.state, props.setState];
@@ -66,14 +67,14 @@ const Form: FunctionComponent<StateProps> = (props) => {
       if (postResponse.status === 200) {
         displaySuccess();
       }
-    } catch (e: any) {
-      if (e.message === "Request rejected") {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message === "Request rejected") {
         displayError("Please accept the Keplr popup window.");
-      } else if (e.message === "Request failed with status code 500") {
-        if (e.response.data.includes("Inventory is empty")) {
+      } else if (e instanceof AxiosError) {
+        if (e.response?.data.includes("Inventory is empty")) {
           displayError("Could not find any NFTs in your inventory.");
         } else {
-          displayError(e.response.data);
+          displayError(e.response?.data);
         }
       } else {
         displayError(

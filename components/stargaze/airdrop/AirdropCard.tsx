@@ -1,4 +1,5 @@
-import { FunctionComponent, useCallback } from "react";
+import type { FunctionComponent } from "react";
+import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import type { Recipient, StateProps } from "../../../types/airdrop";
 import type { MsgExecuteContractEncodeObject } from "cosmwasm";
@@ -94,29 +95,31 @@ const AirdropCard: FunctionComponent<StateProps> = ({ state, setState }) => {
         }
         setRemainingNFTs(remainingNFTs - executeContractMsgs.length);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
       let errorMsg: string;
-      if (e.message === "Request rejected")
-        errorMsg = "The Keplr popup was rejected or closed.";
-      else if (e.message.includes("addr_validate"))
-        errorMsg =
-          "One of the addresses in your airdrop list is not a valid address.";
-      else if (e.message === "Failed to retrieve account from signer")
-        errorMsg =
-          "Failed to retrieve account from signer. Please reconnect Keplr and try again.";
-      else if (e.message.includes("Sender is not an admin"))
-        errorMsg = "You do not have permission to mint from this contract.";
-      else if (e.message.includes("Unauthorized"))
-        errorMsg =
-          "You are attempting to transfer an NFT which you do not own.";
-      else if (e.message.includes("results::empty::Empty"))
-        errorMsg =
-          "You are attempting to transfer an NFT which has not been minted.";
-      else if (e.message.includes("already sold"))
-        errorMsg =
-          "You are attempting to mint an NFT which has already been minted.";
-      else errorMsg = e.message;
+      if (e instanceof Error) {
+        if (e.message === "Request rejected") {
+          errorMsg = "The Keplr popup was rejected or closed.";
+        } else if (e.message.includes("addr_validate")) {
+          errorMsg =
+            "One of the addresses in your airdrop list is not a valid address.";
+        } else if (e.message === "Failed to retrieve account from signer") {
+          errorMsg =
+            "Failed to retrieve account from signer. Please reconnect Keplr and try again.";
+        } else if (e.message.includes("Sender is not an admin")) {
+          errorMsg = "You do not have permission to mint from this contract.";
+        } else if (e.message.includes("Unauthorized")) {
+          errorMsg =
+            "You are attempting to transfer an NFT which you do not own.";
+        } else if (e.message.includes("results::empty::Empty")) {
+          errorMsg =
+            "You are attempting to transfer an NFT which has not been minted.";
+        } else if (e.message.includes("already sold")) {
+          errorMsg =
+            "You are attempting to mint an NFT which has already been minted.";
+        } else errorMsg = e.message;
+      } else errorMsg = "An unknown error occurred.";
       setState({ alertMsg: errorMsg, alertSeverity: "error" });
     }
 

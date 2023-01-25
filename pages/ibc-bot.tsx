@@ -94,8 +94,8 @@ export async function getServerSideProps() {
 
     // Pass data to the page via props
     return { props: { collections: collections, networks: networks } };
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (error: unknown) {
+    console.error(error);
     return {
       props: {
         collections: [

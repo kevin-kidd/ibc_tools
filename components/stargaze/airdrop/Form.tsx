@@ -57,8 +57,8 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
       );
       if (minterResponse.hasOwnProperty("minter")) return minterResponse.minter;
       console.error(minterResponse);
-    } catch (e: any) {
-      console.error(e.message);
+    } catch (error: unknown) {
+      console.error(error);
     }
     setState({
       alertSeverity: "error",
@@ -101,8 +101,8 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
         setState({ sg721Address: sg721Address });
         await handleContract(sg721Address);
       }
-    } catch (e: any) {
-      if (e.message.includes("Error parsing into type")) {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Error parsing into type")) {
         try {
           const minterAddress = await getMinter();
           if (minterAddress) {
@@ -110,8 +110,8 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
             setState({ sg721Address: state.minterAddress });
             setState({ minterAddress: minterAddress });
           }
-        } catch (e: any) {
-          console.log(e.message);
+        } catch (e: unknown) {
+          console.error(e);
           setState({
             loading: false,
             alertSeverity: "error",
@@ -120,12 +120,14 @@ const Form: FunctionComponent<StateProps> = ({ state, setState }) => {
           });
         }
       } else {
-        console.error(e.message);
+        console.error(e);
         let errorMsg: string;
-        if (e.message.includes("bech32"))
-          errorMsg =
-            "Incorrect contract address. Check to make sure you did not make any typos.";
-        else errorMsg = e.message;
+        if (e instanceof Error) {
+          if (e.message.includes("bech32")) {
+            errorMsg =
+              "Incorrect contract address. Check to make sure you did not make any typos.";
+          } else errorMsg = e.message;
+        } else errorMsg = "Unknown error";
         setState({
           loading: false,
           alertSeverity: "error",
