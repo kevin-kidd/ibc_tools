@@ -14,9 +14,12 @@ export const Bounties: FunctionComponent<{
 }> = ({ bounties, setState }) => {
   const handleClaim = async (bounty: Bounty) => {
     try {
-      const claimResponse = await ky.post(BOUNTIES_ENDPOINT + bounty._id, {
-        credentials: "include",
-      });
+      const claimResponse = await ky.post(
+        `${BOUNTIES_ENDPOINT}/bounties/${bounty._id}`,
+        {
+          credentials: "include",
+        }
+      );
       console.log(claimResponse);
       if (claimResponse.ok) {
         setState({
