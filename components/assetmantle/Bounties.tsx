@@ -15,7 +15,7 @@ export const Bounties: FunctionComponent<{
   const handleClaim = async (bounty: Bounty) => {
     try {
       const claimResponse = await ky.post(
-        `${BOUNTIES_ENDPOINT}/bounties/${bounty._id}`,
+        `${BOUNTIES_ENDPOINT}bounties/${bounty._id}`,
         {
           credentials: "include",
         }
